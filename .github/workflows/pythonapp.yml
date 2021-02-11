@@ -16,8 +16,8 @@ jobs:
       with:
         go-version: '1.9.3' # The Go version to download (if necessary) and use.
     - run: go get github.com/tomnomnom/waybackurls
-#    - name: Install Waybackurl
-#    - run: GO111MODULE=on go get -v github.com/lc/gau
+    - name: Install Waybackurl
+    - run: GO111MODULE=on go get -v github.com/lc/gau
 #
 #    - uses: actions/checkout@v1
 #    - name: Test python
