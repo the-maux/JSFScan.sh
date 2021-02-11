@@ -14,12 +14,10 @@ cat ./Interlace/requirements.txt > requirements.txt
 cat ./SecretFinder/requirements.txt >> requirements.txt
 cat ./LinkFinder/requirements.txt >> requirements.txt
 pip3 install -r requirements.txt || exit
-pwd
-ls
-cd Interlace && python3 ./Interlace/setup.py install || exit && cd -
-pwd
-ls
-cd LinkFinder && python3 ./LinkFinder/setup.py install || exit && cd -
+echo '--------------------------'
+ls ./Interlace
+cd Interlace && python3 /setup.py install || exit && cd -
+cd LinkFinder && python3 ./setup.py install || exit && cd -
 
 #INSTALL GAU
 echo -e "\n-----------------------INSTALLING GAU------------------------"
