@@ -15,7 +15,7 @@ cat ./SecretFinder/requirements.txt >> requirements.txt
 cat ./LinkFinder/requirements.txt >> requirements.txt
 pip3 install -r requirements.txt || exit
 echo '--------------------------'
-cd Interlace && ls -l && pwd && python3 /setup.py install || exit && cd -
+cd Interlace && ls -l && pwd && python3 ./setup.py install || exit && cd -
 cd LinkFinder && python3 ./setup.py install || exit && cd -
 
 #INSTALL GAU
