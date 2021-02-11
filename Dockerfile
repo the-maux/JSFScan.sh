@@ -20,4 +20,4 @@ ENV GOPATH=$HOME/go/bin
 ENV PATH $PATH:$GOPATH  
 ENV TARGET Panda.ru
 
-ENTRYPOINT "bash JSFScan.sh --all -r -o $TARGET"
+ENTRYPOINT "/bin/bash /jsfscan/JSFScan.sh"
