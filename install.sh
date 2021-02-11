@@ -11,12 +11,12 @@ git clone https://github.com/dark-warlord14/LinkFinder
 #INSTALL INTERLACE
 echo -e "\n-----------------------INSTALLING INTERLACE------------------------"
 pip3 install -r ./Interlace/requirements.txt || exit
-sudo python3 Interlace/setup.py install || exit
+python3 Interlace/setup.py install || exit
 echo -e "\n-----------------------INSTALLING SECRETFINDER------------------------"
 pip3 install -r ./SecretFinder/requirements.txt || exit
 echo -e "\n-----------------------INSTALLING LINKFINDER------------------------"
 pip3 install -r ./tools/LinkFinder/requirements.txt || exit
-sudo python3 ./LinkFinder/setup.py install || exit
+python3 ./LinkFinder/setup.py install || exit
 
 #INSTALL GAU
 echo -e "\n-----------------------INSTALLING GAU------------------------"
