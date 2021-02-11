@@ -12,6 +12,6 @@ jobs:
       run: docker build . -t jsfscan
     - uses: actions/checkout@v1
     - name: Unit Test inside docker
-      run: docker run jsfscan "/bin/bash JSFScan.sh --all -r -o Panda.ru"
+      run: docker run jsfscan "/bin/bash JSFScan.sh --all -r -o Panda.ru  &> /dev/null"
 
 
