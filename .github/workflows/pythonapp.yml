@@ -19,9 +19,9 @@ jobs:
     - name: Install Waybackurl
     - run: GO111MODULE=on go get -v github.com/lc/gau
     - name: Test python
-      run: python3 -v
+    - run: python3 -v
     - name: Test pip
-      run: pip -v
+    - run: pip -v
 
 
 
