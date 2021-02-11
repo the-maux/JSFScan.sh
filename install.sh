@@ -9,13 +9,12 @@ git clone https://github.com/m4ll0k/SecretFinder.git
 git clone https://github.com/dark-warlord14/LinkFinder
 
 #INSTALL INTERLACE
-echo -e "\n-----------------------INSTALLING INTERLACE------------------------"
-pip3 install -r ./Interlace/requirements.txt || exit
+echo -e "\n-----------------------INSTALLING PYTHON LIBS ------------------------"
+cat ./Interlace/requirements.txt > requirements.txt
+cat ./SecretFinder/requirements.txt >> requirements.txt
+cat ./LinkFinder/requirements.txt >> requirements.txt
+pip3 install -r requirements.txt || exit
 python3 Interlace/setup.py install || exit
-echo -e "\n-----------------------INSTALLING SECRETFINDER------------------------"
-pip3 install -r ./SecretFinder/requirements.txt || exit
-echo -e "\n-----------------------INSTALLING LINKFINDER------------------------"
-pip3 install -r ./tools/LinkFinder/requirements.txt || exit
 python3 ./LinkFinder/setup.py install || exit
 
 #INSTALL GAU
