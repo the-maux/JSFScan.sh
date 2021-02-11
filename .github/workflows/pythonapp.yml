@@ -19,12 +19,12 @@ jobs:
     - run: go get github.com/tomnomnom/waybackurls
     - name: Install Waybackurl
     - run: GO111MODULE=on go get -v github.com/lc/gau
-
-    - uses: actions/checkout@v1
-    - name: Test python
-    - run: python3 -v
-    - name: Test pip
-    - run: pip -v
+#
+#    - uses: actions/checkout@v1
+#    - name: Test python
+#    - run: python3 -v
+#    - name: Test pip
+#    - run: pip -v
 
 
 
