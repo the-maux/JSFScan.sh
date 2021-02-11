@@ -14,8 +14,7 @@ RUN apt -y update && apt -y install git  	\
 				    wget 	\
 				    python3 	\
 				    python3-pip
-RUN
-RUN bash -c "./install.sh &> /dev/null"
+RUN ./install.sh
 ENV HOME /root
 ENV GOPATH=$HOME/go/bin
 ENV PATH $PATH:$GOPATH  
