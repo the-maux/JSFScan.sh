@@ -18,3 +18,6 @@ RUN ./install.sh
 ENV HOME /root
 ENV GOPATH=$HOME/go/bin
 ENV PATH $PATH:$GOPATH  
+ENV TARGET Panda.ru
+
+ENTRYPOINT "bash JSFScan.sh --all -r -o $TARGET"
