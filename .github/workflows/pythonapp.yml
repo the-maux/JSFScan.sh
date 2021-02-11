@@ -1,4 +1,4 @@
-name: JSFSScan CI
+name: Docker Unit-test
 
 on: [push]
 
@@ -6,23 +6,12 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.7]
-
     steps:
-    - uses: actions/checkout@master
-    - uses: actions/setup-go@v1
-      with:
-        go-version: '1.9.3' # The Go version to download (if necessary) and use.
-    - run: ./install.sh
-
-#
-#    - uses: actions/checkout@v1
-#    - name: Test python
-#    - run: python3 -v
-#    - name: Test pip
-#    - run: pip -v
-
+    - uses: actions/checkout@v1
+    - name: Build the Docker image
+      run: docker build . -t jsfscan
+    - uses: actions/checkout@v1
+    - name: Unit Test inside docker
+      run: docker run jsfscan "/bin/ls"
 
 
