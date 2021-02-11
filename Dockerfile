@@ -10,14 +10,14 @@ COPY . .
 
 # install all depedencies
 RUN chmod +x ./install.sh
-RUN apt -y update && apt -y install git  	\
-				    wget 	\
-				    python3 	\
-				    python3-pip
-RUN ./install.sh
-ENV HOME /root
-ENV GOPATH=$HOME/go/bin
-ENV PATH $PATH:$GOPATH  
-ENV TARGET Panda.ru
+#RUN apt -y update && apt -y install git  	\
+#				    wget 	\
+#				    python3 	\
+#				    python3-pip
+#RUN ./install.sh
+#ENV HOME /root
+#ENV GOPATH=$HOME/go/bin
+#ENV PATH $PATH:$GOPATH
+#ENV TARGET Panda.ru
 
-ENTRYPOINT "/bin/bash /jsfscan/JSFScan.sh"
+ENTRYPOINT "/bin/bash /jsfscan/install.sh"
