@@ -20,5 +20,5 @@ ENV GOPATH=$HOME/go/bin
 ENV PATH $PATH:$GOPATH
 ENV TARGET Panda.ru
 
-CMD ["/bin/bash", "/jsfscan/JSFScan.sh", "-all", "-r", "-o", "$TARGET"]
+CMD ["/bin/bash", "./JSFScan.sh", "-l", "target.txt", "-all", "-r", "-o", "$TARGET"]
 #bash ./JSFScan.sh -l target.txt --all -r -o Pandao.ru
