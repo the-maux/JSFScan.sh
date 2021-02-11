@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# list of installed soft: INTERLACE / SECRETFINDER / LINKFINDER / GAU / SUBJS / HTTPX / HAKRAWLER
+
 cd ./tools
 
 git clone https://github.com/codingo/Interlace.git
@@ -15,7 +17,6 @@ pip3 install -r ./tools/SecretFinder/requirements.txt
 echo -e "\n-----------------------INSTALLING LINKFINDER------------------------"
 pip3 install -r ./tools/LinkFinder/requirements.txt
 sudo python3 ./tools/LinkFinder/setup.py install
-echo -e "\n-----------------------FINISHED INSTALLING LINKFINDER------------------------"
 
 #INSTALL GAU
 echo -e "\n-----------------------INSTALLING GAU------------------------"
