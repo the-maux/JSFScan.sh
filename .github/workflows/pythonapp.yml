@@ -1,0 +1,24 @@
+name: PwnDB CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7]
+
+    steps:
+    - uses: actions/checkout@master
+    - uses: actions/setup-go@v1
+      with:
+        go-version: '1.9.3' # The Go version to download (if necessary) and use.
+    - run: go get github.com/tomnomnom/waybackurls
+
+    - name: Lint
+      run: apt update && apt install python3
+
+
+
