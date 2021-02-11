@@ -14,7 +14,7 @@ cat ./Interlace/requirements.txt > requirements.txt
 cat ./SecretFinder/requirements.txt >> requirements.txt
 cat ./LinkFinder/requirements.txt >> requirements.txt
 pip3 install -r requirements.txt || exit
-python3 Interlace/setup.py install || exit
+python3 ./Interlace/setup.py install || exit
 python3 ./LinkFinder/setup.py install || exit
 
 #INSTALL GAU
