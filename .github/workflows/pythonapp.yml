@@ -15,8 +15,8 @@ jobs:
     - uses: actions/setup-go@v1
       with:
         go-version: '1.9.3' # The Go version to download (if necessary) and use.
-    - run: go get github.com/tomnomnom/waybackurls
-    - run: GO111MODULE=on go get -v github.com/lc/gau
+    - run: ./install.sh
+
 #
 #    - uses: actions/checkout@v1
 #    - name: Test python
