@@ -19,8 +19,7 @@ logo
 #Gather JSFilesUrls
 gather_js() {
   echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started Gathering JsFiles-links with gau & subjs & hakrawler \e[0m\n"
-  echo -n "Will scan target in file target.txt, wich are:" && cat target.txt
-  echo -n "Number of files found: " && cat all_urls.txt | wc -l
+  echo "Will scan target in file target.txt, wich are:" && cat target.txt
   cat target.txt | gau | grep -iE "\.js$" | uniq | sort >> all_urls.txt
   cat target.txt | subjs >> all_urls.txt
   #cat target.txt | hakrawler -js -depth 2 -scope subs -plain >> all_urls.txt
