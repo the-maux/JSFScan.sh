@@ -133,165 +133,165 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   <body id="page">
 
     <div class="w3-container report" id="page1" style="display: none; padding-top:22px">
-    <h4><b><i class="fa fa-dashboard"></i> All JavaScript Links</b></h4> ' >> report.html
+    <h4><b><i class="fa fa-dashboard"></i> All JavaScript Links</b></h4> ' >>report.html
 
 echo -e " <input class='myInput' type='text' id='myInput1' onkeyup=\"myFunction('myInput1', 'myUL1')\" placeholder="Search.." title="Search">
     <div class="w3-responsive w3-card-4">
-      <ul id=\"myUL1\" class=\"myUL\">" >> report.html
-        
+      <ul id=\"myUL1\" class=\"myUL\">" >>report.html
+
 jslinks=./jsfile_links.txt
 if [ -f "$jslinks" ]; then
- cat ./jsfile_links.txt | while read link; do echo -e "<li><a href="$link">$link</a></li>" >> report.html ; done
+  cat ./jsfile_links.txt | while read link; do echo -e "<li><a href="$link">$link</a></li>" >>report.html; done
 else
- echo -e "<li><a href="#">No Jslinks Links Found For Target</a></li>" >> report.html
+  echo -e "<li><a href=" #">No Jslinks Links Found For Target</a></li>" >> report.html
 fi
 
 echo -e '
       </ul>
     </div>
-    </div>' >> report.html 
+    </div>' >>report.html
 
 echo -e '
     <div class="w3-container report" id="page2" style="display: none; padding-top:22px">
-      <h4><b><i class="fa fa-dashboard"></i> Live JavaScript Links</b></h4> ' >> report.html
+      <h4><b><i class="fa fa-dashboard"></i> Live JavaScript Links</b></h4> ' >>report.html
 
 echo -e " <input class='myInput' type='text' id='myInput2' onkeyup=\"myFunction('myInput2', 'myUL2')\" placeholder="Search.." title="Search">
     <div class="w3-responsive w3-card-4">
-      <ul id=\"myUL2\" class=\"myUL\">" >> report.html
-        
+      <ul id=\"myUL2\" class=\"myUL\">" >>report.html
+
 live_jslinks=./live_jsfile_links.txt
 if [ -f "$live_jslinks" ]; then
- cat ./live_jsfile_links.txt | while read link; do echo -e "<li><a href="$link">$link</a></li>" >> report.html ; done
+  cat ./live_jsfile_links.txt | while read link; do echo -e "<li><a href="$link">$link</a></li>" >>report.html; done
 else
- echo -e "<li><a href="#">No Jslinks Links Found For Target</a></li>" >> report.html
+  echo -e "<li><a href=" #">No Jslinks Links Found For Target</a></li>" >> report.html
 fi
 
 echo -e '
       </ul>
     </div>
-    </div>' >> report.html 
+    </div>' >>report.html
 
 echo -e '
     <div class="w3-container report" id="page3" style="display: none; padding-top:22px">
-      <h4><b><i class="fa fa-dashboard"></i> Endpoints</b></h4>' >> report.html
+      <h4><b><i class="fa fa-dashboard"></i> Endpoints</b></h4>' >>report.html
 
 echo -e "<div class="w3-responsive w3-card-4"><pre1><strong>Press Ctrl + F to Search!</strong></pre1></div>
     <div class="w3-responsive w3-card-4">
-      <ul id=\"myUL3\" class=\"myUL\">" >> report.html
-        
+      <ul id=\"myUL3\" class=\"myUL\">" >>report.html
+
 endpoints=./endpoints.txt
 if [ -f "$endpoints" ]; then
- echo -e "<pre><code>$(cat ./endpoints.txt | grep -Ev "Usage|Error")</code></pre>" >> report.html
+  echo -e "<pre><code>$(cat ./endpoints.txt | grep -Ev "Usage|Error")</code></pre>" >>report.html
 else
- echo -e "<li><a href="#">No Jslinks Links Found For Target</a></li>" >> report.html
+  echo -e "<li><a href=" #">No Jslinks Links Found For Target</a></li>" >> report.html
 fi
 
 echo -e '
       </ul>
     </div>
-    </div>' >> report.html 
+    </div>' >>report.html
 
 echo -e '
 
       <div class="w3-container report" id="page4" style="display: none; padding-top:22px">
-        <h4><b><i class="fa fa-dashboard"></i> Secrets</b></h4>' >> report.html
+        <h4><b><i class="fa fa-dashboard"></i> Secrets</b></h4>' >>report.html
 
 echo -e " <div class="w3-responsive w3-card-4"><pre1><strong>Press Ctrl + F to Search!</strong></pre1></div>
   <div class="w3-responsive w3-card-4">
-      <ul id=\"myUL4\" class=\"myUL\">" >> report.html
-        
+      <ul id=\"myUL4\" class=\"myUL\">" >>report.html
+
 jslinksecret=./jslinksecret.txt
 if [ -f "$jslinksecret" ]; then
- echo -e "<pre><code>$(cat ./jslinksecret.txt)</code></pre>" >> report.html
+  echo -e "<pre><code>$(cat ./jslinksecret.txt)</code></pre>" >>report.html
 else
- echo -e "<li><a href="#">No Jslinks Links Found For Target</a></li>" >> report.html
+  echo -e "<li><a href=" #">No Jslinks Links Found For Target</a></li>" >> report.html
 fi
 
 echo -e '
       </ul>
     </div>
-    </div>' >> report.html 
+    </div>' >>report.html
 
 echo -e '
         <div class="w3-container report" id="page5" style="display: none; padding-top:22px">
-          <h4><b><i class="fa fa-dashboard"></i> Wordlist</b></h4>' >> report.html
+          <h4><b><i class="fa fa-dashboard"></i> Wordlist</b></h4>' >>report.html
 
 echo -e " <div class="w3-responsive w3-card-4"><pre1><strong>Press Ctrl + F to Search!</strong></pre1></div>
     <div class="w3-responsive w3-card-4">
-      <ul id=\"myUL5\" class=\"myUL\">" >> report.html
-        
+      <ul id=\"myUL5\" class=\"myUL\">" >>report.html
+
 jswordlist=./jswordlist.txt
 if [ -f "$jswordlist" ]; then
- echo -e "<pre><code>$(cat ./jswordlist.txt)</code></pre>" >> report.html
+  echo -e "<pre><code>$(cat ./jswordlist.txt)</code></pre>" >>report.html
 else
- echo -e "<li><a href="#">No Jslinks Links Found For Target</a></li>" >> report.html
+  echo -e "<li><a href=" #">No Jslinks Links Found For Target</a></li>" >> report.html
 fi
 
 echo -e '
       </ul>
     </div>
-    </div>' >> report.html 
+    </div>' >>report.html
 
 echo -e '
 
           <div class="w3-container report" id="page6" style="display: none; padding-top:22px">
-            <h4><b><i class="fa fa-dashboard"></i> Variables</b></h4>' >> report.html
+            <h4><b><i class="fa fa-dashboard"></i> Variables</b></h4>' >>report.html
 
 echo -e " <div class="w3-responsive w3-card-4"><pre1><strong>Press Ctrl + F to Search!</strong></pre1></div>
     <div class="w3-responsive w3-card-4">
-      <ul id=\"myUL6\" class=\"myUL\">" >> report.html
-        
+      <ul id=\"myUL6\" class=\"myUL\">" >>report.html
+
 js_var=./js_var.txt
 if [ -f "$js_var" ]; then
- echo -e "<pre><code>$(cat ./js_var.txt | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g")</code></pre>" >> report.html
+  echo -e "<pre><code>$(cat ./js_var.txt | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g")</code></pre>" >>report.html
 else
- echo -e "<li><a href="#">No Jslinks Links Found For Target</a></li>" >> report.html
+  echo -e "<li><a href=" #">No Jslinks Links Found For Target</a></li>" >> report.html
 fi
 
 echo -e '
       </ul>
     </div>
-    </div>' >> report.html 
+    </div>' >>report.html
 
 echo -e '
             <div class="w3-container report" id="page7" style="display: none; padding-top:22px">
-              <h4><b><i class="fa fa-dashboard"></i> DOM XSS</b></h4>' >> report.html
+              <h4><b><i class="fa fa-dashboard"></i> DOM XSS</b></h4>' >>report.html
 
 echo -e " <div class="w3-responsive w3-card-4"><pre1><strong>Press Ctrl + F to Search!</strong></pre1></div>
     <div class="w3-responsive w3-card-4">
-      <ul id=\"myUL7\" class=\"myUL\">" >> report.html
-        
+      <ul id=\"myUL7\" class=\"myUL\">" >>report.html
+
 dom_xss=./domxss_scan.txt
 if [ -f "$dom_xss" ]; then
- echo -e "<pre><code>$(cat ./domxss_scan.txt)</code></pre>" >> report.html
+  echo -e "<pre><code>$(cat ./domxss_scan.txt)</code></pre>" >>report.html
 else
- echo -e "<li><a href="#">No Jslinks Links Found For Target</a></li>" >> report.html
+  echo -e "<li><a href=" #">No Jslinks Links Found For Target</a></li>" >> report.html
 fi
 
 echo -e '
       </ul>
     </div>
-    </div>' >> report.html 
+    </div>' >>report.html
 
 echo -e '
               <div class="w3-container report" id="page8" style="display: none; padding-top:22px">
-                <h4><b><i class="fa fa-dashboard"></i> JSFiles For Manualy Testing</b></h4>' >> report.html
+                <h4><b><i class="fa fa-dashboard"></i> JSFiles For Manualy Testing</b></h4>' >>report.html
 
 echo -e " <input class='myInput' type='text' id='myInput8' onkeyup=\"myFunction('myInput8', 'myUL8')\" placeholder="Search.." title="Search">
     <div class="w3-responsive w3-card-4">
-      <ul id=\"myUL8\" class=\"myUL\">" >> report.html
-        
+      <ul id=\"myUL8\" class=\"myUL\">" >>report.html
+
 live_jslinks=./live_jsfile_links.txt
 if [ -f "$live_jslinks" ]; then
- cat ./live_jsfile_links.txt | while read link; do echo -e "<li><a href="$link" target="_blank" >$link</a></li>" >> report.html ; done
+  cat ./live_jsfile_links.txt | while read link; do echo -e "<li><a href="$link" target="_blank" >$link</a></li>" >>report.html; done
 else
- echo -e "<li><a href="#">No Jslinks Links Found For Target</a></li>" >> report.html
+  echo -e "<li><a href=" #">No Jslinks Links Found For Target</a></li>" >> report.html
 fi
 
 echo -e '
       </ul>
     </div>
-    </div>' >> report.html 
+    </div>' >>report.html
 
 echo -e '
   </body>
@@ -360,4 +360,4 @@ function openTable(tablename) {
 
 </body>
 </html>
-' >> report.html
+' >>report.html
