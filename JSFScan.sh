@@ -22,7 +22,7 @@ gather_js() {
   cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u > urls.txt
   number_of_file_found=$(cat urls.txt | wc -l)
   echo "Number of live js files found: $((number_of_file_found))"
-  if [ number_of_file_found = "0" ]
+  if [ number_of_file_found == "0" ]
   then
           echo "No file found, Exiting..."
           exit 0
