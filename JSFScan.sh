@@ -18,13 +18,12 @@ logo
 
 #Gather JSFilesUrls
 gather_js() {
-  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Started Gathering JsFiles-links with gau & subjs & hakrawler \e[0m\n"
+  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started Gathering JsFiles-links with gau & subjs & hakrawler \e[0m\n"
   echo -n "Will scan target in file target.txt, wich are:" && cat target.txt
   echo -n "Number of files found: " && cat all_urls.txt | wc -l
   cat target.txt | gau | grep -iE "\.js$" | uniq | sort >> all_urls.txt
   cat target.txt | subjs >> all_urls.txt
   #cat target.txt | hakrawler -js -depth 2 -scope subs -plain >> all_urls.txt
-  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Checking for live JsFiles-links\e[0m\n"
   cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u > urls.txt
   echo -n "Number of live js files found: " && cat urls.txt | wc -l
 }
@@ -37,22 +36,25 @@ open_jsurlfile() {
 
 #Gather Endpoints From JsFiles
 endpoint_js() {
-  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Started gathering Endpoints\e[0m\n"
-  interlace -tL urls.txt -threads 5 -c "echo 'Scanning _target_ Now' ; python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> endpoints.txt" --silent
+  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Started gathering Endpoints\e[0m"
+  interlace -tL urls.txt -threads 5 -c "echo 'python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> endpoints.txt" --silent
+  echo -n "Number of endpoint found: " && cat endpoints.txt | wc -l
 }
 
 #Gather Secrets From Js Files
 secret_js() {
-  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Started Finding Secrets in JSFiles\e[0m\n"
+  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Started Finding Secrets in JSFiles\e[0m"
   interlace -tL urls.txt -threads 5 -c "python3 ./tools/SecretFinder/SecretFinder.py -i _target_ -o cli >> jslinksecret.txt" --silent
+  echo -n "Number of secrets found: " && cat jslinksecret.txt | wc -l
 }
 
 #Collect Js Files For Maually Search
 getjsbeautify() {
-  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Started to Gather JSFiles locally for Manual Testing\e[0m\n"
+  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Started to Gather JSFiles locally for Manual Testing\e[0m"
   mkdir -p jsfiles
   interlace -tL urls.txt -threads 5 -c "bash ./tools/getjsbeautify.sh _target_" --silent
-  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Manually Search For Secrets Using gf or grep in out/\e[0m\n"
+#  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Manually Search For Secrets Using gf or grep in out/\e[0m\n"
+  echo "List of JS downloaded:" && ls -l ./jsfiles/
 }
 
 #Gather JSFilesWordlist
