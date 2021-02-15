@@ -54,7 +54,7 @@ getjsbeautify() {
   mkdir -p jsfiles
   interlace -tL urls.txt -threads 5 -c "bash ./tools/getjsbeautify.sh _target_" --silent --no-bar
 #  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Manually Search For Secrets Using gf or grep in out/\e[0m\n"
-  echo "List of JS downloaded:"
+  echo "Getjsbeautify downloaded $(ls -l ./jsfiles/ | wc -l) files"
 }
 
 #Gather JSFilesWordlist
