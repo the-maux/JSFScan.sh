@@ -31,7 +31,6 @@ gather_js() {
 
 #Gather Endpoints From JsFiles
 endpoint_js() {
-
   interlace -tL urls.txt -threads 5 -c "echo 'starting analyse of _target_ '" --silent # ; echo 'python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> endpoints.txt
   number_of_endpoint_found=$(cat endpoints.txt | wc -l)
   echo "Number of endpoint found: $((number_of_file_found))"
