@@ -4,11 +4,13 @@
 
 #Gather JSFilesUrls
 gather_js() {
-  cat target.txt | gau | grep -iE "\.js$" | uniq | sort >> all_urls.txt
-  echo -n "With Gau found: " && cat urls.txt | wc -l
-  cat target.txt | subjs >> all_urls.txt
-  echo -n "With subjs found: " && cat urls.txt | wc -l && echo "Filtering wih httpx for live js"
-  #cat target.txt | hakrawler -js -depth 2 -scope subs -plain >> all_urls.txt
+  cat target.txt | gau | grep -iE "\.js$" | uniq | sort > gau_urls.txt
+  echo -n "With Gau found: " && cat gau_urls.txt | wc -l
+  cat target.txt | subjs > subjs_url.txt
+  echo -n "With subjs found: " && cat subjs_url.txt | wc -l && echo "Filtering wih httpx for live js"
+  #cat target.txt | hakrawler -js -depth 2 -scope subs -plain >> hakrawler_urls.txt
+  #echo -n "With subjs found: " && cat hakrawler_urls.txt | wc -l && echo "Filtering wih httpx for live js"
+  cat gau_urls.txt > all_urls.txt && cat subjs_url.txt >> all_urls.txt # && cat hakrawler_urls.txt >> all_urls.txt
   cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u > urls.txt
   echo -n "Number of live js files found: " && cat urls.txt | wc -l
 }
