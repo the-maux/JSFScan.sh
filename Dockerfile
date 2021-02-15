@@ -37,6 +37,6 @@ ENV GOPATH=$HOME/go/bin
 ENV OUTPUT_DIR=/root/reportDirectory
 ENV PATH $PATH:$GOPATH
 
-RUN echo "github.com\nstatic-assets.tesla.com" > target.txt
+RUN echo "github.com" > target.txt
 
 CMD ["/bin/bash", "./JSFScan.sh"]
