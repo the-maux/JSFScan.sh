@@ -9,7 +9,7 @@
 ## install binary depedencies
 #RUN apt -y update && apt -y install git wget python3 python3-pip
 #
-## install all python tools
+## install python tools
 #RUN git clone https://github.com/codingo/Interlace.git
 #RUN git clone https://github.com/dark-warlord14/LinkFinder
 #RUN git clone https://github.com/m4ll0k/SecretFinder.git
@@ -21,7 +21,7 @@
 #RUN cd Interlace && python3 ./setup.py install
 #RUN cd LinkFinder && python3 ./setup.py install
 #
-## install all go tools
+## install go tools
 #RUN go get github.com/tomnomnom/waybackurls
 #RUN GO111MODULE=on go get -v github.com/lc/gau
 #RUN GO111MODULE=on go get -v github.com/lc/subjs
