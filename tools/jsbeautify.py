@@ -10,7 +10,7 @@ def beauty(content):
 
 
 def getjs(url):
-    http_response = requests.get(url)
+    http_response = requests.get(url, verify=False)
     if http_response.status_code != 200:
         return None
     return http_response
