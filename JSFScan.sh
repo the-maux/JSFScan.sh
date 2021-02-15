@@ -40,7 +40,7 @@ endpoint_js() {
   fi
   cat all_endpoints.txt | sort | uniq > endpoints.txt
   echo "Number of endpoint found: $(cat endpoints.txt | wc -l)"
-  cat endpoints.txt
+  #cat endpoints.txt
 }
 
 #Gather Secrets From Js Files
@@ -105,33 +105,33 @@ send_to_issue() {
 export PYTHONWARNINGS="ignore:Unverified HTTPS request"
 
 recon() {  # Try to gain the maximum of uniq JS file from the target
-  echo -e "\e[36mStarted Gathering JsFiles-links with gau & subjs & hakrawler \e[0m"
+  echo -e "\e[36m[+] Started Gathering JsFiles-links with gau & subjs & hakrawler \e[0m"
   echo "Searching JSFiles on target(s):" && cat target.txt
   gather_js
-  echo -e "\e[36mStarted gathering Endpoints\e[0m"
+  echo -e "\e[36m[+] Started gathering Endpoints\e[0m"
   endpoint_js
-#  echo -e "\e[36mStarted to Gather JSFiles locally for Manual Testing\e[0m"
+#  echo -e "\e[36m[+] Started to Gather JSFiles locally for Manual Testing\e[0m"
 #  getjsbeautify
-#  echo -e "\e[36mStarted Gathering Words From JsFiles-links For Wordlist.\e[0m"
+#  echo -e "\e[36m[+] Started Gathering Words From JsFiles-links For Wordlist.\e[0m"
 #  wordlist_js
-#  echo -e "\e[36mStarted Finding Varibles in JSFiles For Possible XSS\e[0m"
+#  echo -e "\e[36m[+] Started Finding Varibles in JSFiles For Possible XSS\e[0m"
 #  var_js
 }
 
 
 analyse() {
-  echo -e "\e[36m Scanning JSFiles For Possible DomXSS\e[0m"
+  echo -e "\e[36m[+] Scanning JSFiles For Possible DomXSS\e[0m"
   domxss_js
-  echo -e "\e[36m Started Finding Secrets in JSFiles\e[0m"
+  echo -e "\e[36m[+]  Started Finding Secrets in JSFiles\e[0m"
   secret_js
 }
 
 report() {
-  echo -e "\e[36m Generating Html Report!\e[0m"
+  echo -e "\e[36m[+]  Generating Html Report!\e[0m"
   bash report.sh
-  echo -e "\e[36m Generating output directory!\e[0m"
+  echo -e "\e[36m[+]  Generating output directory!\e[0m"
   output
-  echo -e "\e[36m Sending report to github project  !\e[0m"
+  echo -e "\e[36m[+]  Sending report to github project  !\e[0m"
   send_to_issue
 }
 
