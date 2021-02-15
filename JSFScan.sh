@@ -15,7 +15,7 @@ gather_js() {
   cat target.txt | gau | grep -iE "\.js$" | uniq | sort > gau_urls.txt
   echo -e "\nGau found:  $(cat gau_urls.txt | wc -l) file(s)"
   cat target.txt | subjs > subjs_url.txt
-  echo -e "subjs found: $(cat subjs_url.txt | wc -l) file(s)\nFiltering wih httpx for live js"
+  echo -e "subjs found: $(cat subjs_url.txt | wc -l) file(s)\nFiltering duplicate and wih httpx removing dead link"
   #cat target.txt | hakrawler -js -depth 2 -scope subs -plain >> hakrawler_urls.txt
   #echo -n "With subjs found: " && cat hakrawler_urls.txt | wc -l && echo "Filtering wih httpx for live js"
   cat gau_urls.txt > all_urls.txt && cat subjs_url.txt >> all_urls.txt # && cat hakrawler_urls.txt >> all_urls.txt
@@ -25,15 +25,21 @@ gather_js() {
   if [ $number_of_file_found = "0" ]
   then
           echo "No file found, Exiting..."
-          exit 0
+          exit 1
   fi
 }
 
 #Gather Endpoints From JsFiles
 endpoint_js() {
-  cmd="echo 'starting analyse of _target_ ' ; echo 'python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> endpoints.txt"
-  interlace -tL urls.txt -threads 5 -c $cmd --silent
-  echo -n "Number of endpoint found: " && cat endpoints.txt | wc -l
+
+  interlace -tL urls.txt -threads 5 -c "echo 'starting analyse of _target_ ' ; echo 'python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> endpoints.txt" --silent
+  number_of_endpoint_found=$(cat endpoints.txt | wc -l)
+  echo "Number of endpoint found: $((number_of_file_found))"
+  if [ $number_of_endpoint_found = "0" ]
+  then
+          echo "No endpoint found, Exiting..."
+          exit 1
+  fi
 }
 
 #Gather Secrets From Js Files
@@ -98,16 +104,16 @@ send_to_issue() {
 export PYTHONWARNINGS="ignore:Unverified HTTPS request"
 
 recon() {  # Try to gain the maximum of uniq JS file from the target
-  echo -e "\e[36m Started Gathering JsFiles-links with gau & subjs & hakrawler \e[0m"
+  echo -e "\e[36mStarted Gathering JsFiles-links with gau & subjs & hakrawler \e[0m"
   echo "Searching JSFiles on target(s):" && cat target.txt
   gather_js
-  echo -e "\e[36m Started gathering Endpoints\e[0m"
+  echo -e "\e[36mStarted gathering Endpoints\e[0m"
   endpoint_js
-#  echo -e "\e[36m Started to Gather JSFiles locally for Manual Testing\e[0m"
+#  echo -e "\e[36mStarted to Gather JSFiles locally for Manual Testing\e[0m"
 #  getjsbeautify
-#  echo -e "\e[36m Started Gathering Words From JsFiles-links For Wordlist.\e[0m"
+#  echo -e "\e[36mStarted Gathering Words From JsFiles-links For Wordlist.\e[0m"
 #  wordlist_js
-#  echo -e "\e[36m Started Finding Varibles in JSFiles For Possible XSS\e[0m"
+#  echo -e "\e[36mStarted Finding Varibles in JSFiles For Possible XSS\e[0m"
 #  var_js
 }
 
