@@ -12,7 +12,7 @@ echo -e " \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_| \e[0m\n"
 #Gather JSFilesUrls
 gather_js() {
   cat target.txt | gau | grep -iE "\.js$" | uniq | sort > gau_urls.txt
-  echo "With Gau found: " && cat gau_urls.txt | wc -l
+  echo "\nWith Gau found: " && cat gau_urls.txt | wc -l
   cat target.txt | subjs > subjs_url.txt
   echo "With subjs found: " && cat subjs_url.txt | wc -l && echo -n "Filtering wih httpx for live js"
   #cat target.txt | hakrawler -js -depth 2 -scope subs -plain >> hakrawler_urls.txt
