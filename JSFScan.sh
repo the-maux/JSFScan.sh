@@ -5,7 +5,9 @@
 #Gather JSFilesUrls
 gather_js() {
   cat target.txt | gau | grep -iE "\.js$" | uniq | sort >> all_urls.txt
+  echo -n "With Gau found: " && cat urls.txt | wc -l
   cat target.txt | subjs >> all_urls.txt
+  echo -n "With subjs found: " && cat urls.txt | wc -l && echo "Filtering wih httpx for live js"
   #cat target.txt | hakrawler -js -depth 2 -scope subs -plain >> all_urls.txt
   cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u > urls.txt
   echo -n "Number of live js files found: " && cat urls.txt | wc -l
@@ -88,12 +90,12 @@ send_to_issue() {
 export PYTHONWARNINGS="ignore:Unverified HTTPS request"
 
 
-echo "\e[36m_______ ______ _______ ______                          _     "
-echo "(_______/ _____(_______/ _____)                        | |    "
-echo "     _ ( (____  _____ ( (____   ____ _____ ____     ___| |__  "
-echo " _  | | \____ \|  ___) \____ \ / ___(____ |  _ \   /___|  _ \ "
-echo "| |_| | _____) | |     _____) ( (___/ ___ | | | |_|___ | | | |"
-echo " \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_| \e[0m\n"
+echo -e "\e[36m_______ ______ _______ ______                          _     "
+echo -e "(_______/ _____(_______/ _____)                        | |    "
+echo -e "     _ ( (____  _____ ( (____   ____ _____ ____     ___| |__  "
+echo -e " _  | | \____ \|  ___) \____ \ / ___(____ |  _ \   /___|  _ \ "
+echo -e "| |_| | _____) | |     _____) ( (___/ ___ | | | |_|___ | | | |"
+echo -e " \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_| \e[0m\n"
 
 echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started Gathering JsFiles-links with gau & subjs & hakrawler \e[0m"
 echo "Searching JSFiles on target(s):" && cat target.txt
