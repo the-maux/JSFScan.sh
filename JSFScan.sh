@@ -39,6 +39,7 @@ endpoint_js() {
           echo "No endpoint found, Exiting..."
           exit 1
   fi
+  cat endpoints.txt
 }
 
 #Gather Secrets From Js Files
