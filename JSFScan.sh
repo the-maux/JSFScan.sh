@@ -15,7 +15,7 @@ gather_js() {
   cat target.txt | gau | grep -iE "\.js$" | uniq | sort > gau_urls.txt
   echo -e "\n Gau found:  $(cat gau_urls.txt | wc -l) file(s)"
   cat target.txt | subjs > subjs_url.txt
-  echo -e "subjs found: $((cat subjs_url.txt | wc -l)) file(s)\nFiltering wih httpx for live js"
+  echo -e "subjs found: $(cat subjs_url.txt | wc -l) file(s)\nFiltering wih httpx for live js"
   #cat target.txt | hakrawler -js -depth 2 -scope subs -plain >> hakrawler_urls.txt
   #echo -n "With subjs found: " && cat hakrawler_urls.txt | wc -l && echo "Filtering wih httpx for live js"
   cat gau_urls.txt > all_urls.txt && cat subjs_url.txt >> all_urls.txt # && cat hakrawler_urls.txt >> all_urls.txt
