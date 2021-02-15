@@ -40,4 +40,3 @@ ENV PATH $PATH:$GOPATH
 RUN echo "github.com\nstatic-assets.tesla.com" > target.txt
 
 CMD ["/bin/bash", "./JSFScan.sh"]
-#bash ./JSFScan.sh -l target.txt --all -r -o Pandao.ru

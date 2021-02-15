@@ -87,6 +87,25 @@ output() {
   mkdir -p $dir
   mv -vf endpoints.txt all_urls.txt jslinksecret.txt urls.txt jswordlist.txt js_var.txt domxss_scan.txt report.html $dir/
   mv -v jsfiles/ $dir/
+  tar -cvf archive.tar $dir/
+}
+
+output() {
+  token=$GITHUB_TOKEN
+  repo=the-maux/JSFScan.sh
+
+  upload_url=$(curl -s -H "Authorization: token $token"  \
+     -d '{"tag_name": "test", "name":"release-0.0.1","body":"this is the result of the scan"}'  \
+     "https://api.github.com/repos/$repo/releases" | jq -r '.upload_url')
+
+  upload_url="${upload_url%\{*}"
+
+  echo "uploading asset to release to url : $upload_url"
+
+  curl -s -H "Authorization: token $token"  \
+        -H "Content-Type: application/zip" \
+        --data-binary @archive.tar  \
+        "$upload_url?name=archive.tar&label=JSHUNT"
 }
 
 export PYTHONWARNINGS="ignore:Unverified HTTPS request"
@@ -101,3 +120,4 @@ domxss_js
 report
 dir=$OUTPUT_DIR
 output
+send_to_issue

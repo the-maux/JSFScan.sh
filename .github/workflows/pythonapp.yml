@@ -9,13 +9,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Build the Docker image
-      run: docker build -t themaux/jsfscan .
+      run: docker build -t themaux/jsfscan .  -e GITHUB_PASSWD
     - uses: actions/checkout@v1
     - name: Start the scan
-      run: docker run themaux/jsfscan
-# TODO: check if the branch already exist to destroy it if yes
-#    - uses: peterjgrainger/action-create-branch@v2.0.1
-#    - env:
-#      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#    - with:
-#      branch: 'release-notes'
+      run: docker run -e GITHUB_PASSWD "${{ secrets.GITHUB_TOKEN }}" themaux/jsfscan
