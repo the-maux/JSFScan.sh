@@ -31,7 +31,7 @@ gather_js() {
 
 #Gather Endpoints From JsFiles
 endpoint_js() {
-  interlace -tL urls.txt -threads 5 -c "echo 'python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> endpoints.txt" --silent
+  interlace -tL urls.txt -threads 5 -c "echo 'starting analyse of _target_ ' ; echo 'python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> endpoints.txt" --silent
   echo -n "Number of endpoint found: " && cat endpoints.txt | wc -l
 }
 
@@ -69,6 +69,7 @@ domxss_js() {
 
 #Save in Output Folder
 output() {
+  dir=$OUTPUT_DIR
   mkdir -p $dir
   mv -vf endpoints.txt all_urls.txt jslinksecret.txt urls.txt jswordlist.txt js_var.txt domxss_scan.txt report.html $dir/
   mv -v jsfiles/ $dir/
@@ -120,7 +121,6 @@ analyse() {
 report() {
   echo -e "\e[36m[\e[32m+\e[36m]\e[92m Generating Html Report!\e[0m"
   bash report.sh
-  dir=$OUTPUT_DIR
   echo -e "\e[36m[\e[32m+\e[36m]\e[92m Generating output directory!\e[0m"
   output
   echo -e "\e[36m[\e[32m+\e[36m]\e[92m Sending report to github project  !\e[0m"
