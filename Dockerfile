@@ -1,16 +1,15 @@
 FROM golang:latest
 MAINTAINER bolli95 "maxlukasboll@gmail.com"
 
-# install all depedencies
-RUN apt -y update && apt -y install git wget python3 python3-pip
-
-RUN mkdir -p /root/tools
-
 # copy all files to the container
+RUN mkdir -p /root/tools
 COPY . /root
 WORKDIR /root/tools
-# install all tools
 
+# install binary depedencies
+RUN apt -y update && apt -y install git wget python3 python3-pip
+
+# install all python tools
 RUN git clone https://github.com/codingo/Interlace.git
 RUN git clone https://github.com/dark-warlord14/LinkFinder
 RUN git clone https://github.com/m4ll0k/SecretFinder.git
@@ -22,21 +21,18 @@ RUN pip3 install -r requirements.txt
 RUN cd Interlace && python3 ./setup.py install
 RUN cd LinkFinder && python3 ./setup.py install
 
+# install all go tools
 RUN go get github.com/tomnomnom/waybackurls
 RUN GO111MODULE=on go get -v github.com/lc/gau
 RUN GO111MODULE=on go get -v github.com/lc/subjs
 RUN GO111MODULE=on go get -v github.com/projectdiscovery/httpx/cmd/httpx
 RUN GO111MODULE=on go get -v github.com/hakluke/hakrawler
 
-RUN chmod +x /root/JSFScan.sh
-
 WORKDIR /root
 
 ENV HOME /root
 ENV GOPATH=$HOME/go/bin
-ENV OUTPUT_DIR=/root/reportDirectory
 ENV PATH $PATH:$GOPATH
-
-RUN echo "github.com" > target.txt
+ENV OUTPUT_DIR=/root/reportDirectory
 
 CMD ["/bin/bash", "./JSFScan.sh"]

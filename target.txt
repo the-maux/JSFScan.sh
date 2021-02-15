@@ -1,1 +1,1 @@
-github.com
+static-assets.tesla.com
