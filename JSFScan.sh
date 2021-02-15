@@ -2,6 +2,13 @@
 
 # Todo check if the output directory already exist, caused it failed if yes
 
+echo -e "\e[36m_______ ______ _______ ______                          _     "
+echo -e "(_______/ _____(_______/ _____)                        | |    "
+echo -e "     _ ( (____  _____ ( (____   ____ _____ ____     ___| |__  "
+echo -e " _  | | \____ \|  ___) \____ \ / ___(____ |  _ \   /___|  _ \ "
+echo -e "| |_| | _____) | |     _____) ( (___/ ___ | | | |_|___ | | | |"
+echo -e " \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_| \e[0m\n"
+
 #Gather JSFilesUrls
 gather_js() {
   cat target.txt | gau | grep -iE "\.js$" | uniq | sort > gau_urls.txt
@@ -15,29 +22,20 @@ gather_js() {
   echo -n "Number of live js files found: " && cat urls.txt | wc -l
 }
 
-#Open JSUrlFiles
-open_jsurlfile() {
-  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Filtering JsFiles-links\e[0m\n"
-  cat target.txt | httpx -follow-redirects -silent -status-code | grep "[200]" | cut -d ' ' -f1 | sort -u > urls.txt
-}
-
 #Gather Endpoints From JsFiles
 endpoint_js() {
-
   interlace -tL urls.txt -threads 5 -c "echo 'python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> endpoints.txt" --silent
   echo -n "Number of endpoint found: " && cat endpoints.txt | wc -l
 }
 
 #Gather Secrets From Js Files
 secret_js() {
-
   interlace -tL urls.txt -threads 5 -c "python3 ./tools/SecretFinder/SecretFinder.py -i _target_ -o cli >> jslinksecret.txt" --silent
   echo -n "Number of secrets found: " && cat jslinksecret.txt | wc -l
 }
 
 #Collect Js Files For Maually Search
 getjsbeautify() {
-
   mkdir -p jsfiles
   interlace -tL urls.txt -threads 5 -c "bash ./tools/getjsbeautify.sh _target_" --silent
 #  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Manually Search For Secrets Using gf or grep in out/\e[0m\n"
@@ -46,7 +44,6 @@ getjsbeautify() {
 
 #Gather JSFilesWordlist
 wordlist_js() {
-
   cat urls.txt | python3 ./tools/getjswords.py >> temp_jswordlist.txt
   cat temp_jswordlist.txt | sort -u >> jswordlist.txt
   rm temp_jswordlist.txt
@@ -91,34 +88,39 @@ send_to_issue() {
 
 export PYTHONWARNINGS="ignore:Unverified HTTPS request"
 
+recon() {  # Try to gain the maximum of uniq JS file from the target
+  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started Gathering JsFiles-links with gau & subjs & hakrawler \e[0m"
+  echo "Searching JSFiles on target(s):" && cat target.txt
+  gather_js
+  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started gathering Endpoints\e[0m"
+  endpoint_js
+  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started to Gather JSFiles locally for Manual Testing\e[0m"
+  getjsbeautify
+  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started Gathering Words From JsFiles-links For Wordlist.\e[0m"
+  wordlist_js
+  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started Finding Varibles in JSFiles For Possible XSS\e[0m"
+  var_js
+}
 
-echo -e "\e[36m_______ ______ _______ ______                          _     "
-echo -e "(_______/ _____(_______/ _____)                        | |    "
-echo -e "     _ ( (____  _____ ( (____   ____ _____ ____     ___| |__  "
-echo -e " _  | | \____ \|  ___) \____ \ / ___(____ |  _ \   /___|  _ \ "
-echo -e "| |_| | _____) | |     _____) ( (___/ ___ | | | |_|___ | | | |"
-echo -e " \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_| \e[0m\n"
 
-echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started Gathering JsFiles-links with gau & subjs & hakrawler \e[0m"
-echo "Searching JSFiles on target(s):" && cat target.txt
-gather_js
-echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started gathering Endpoints\e[0m"
-endpoint_js
-echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started Finding Secrets in JSFiles\e[0m"
-secret_js
-echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started to Gather JSFiles locally for Manual Testing\e[0m"
-getjsbeautify
-echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started Gathering Words From JsFiles-links For Wordlist.\e[0m"
-wordlist_js
-echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started Finding Varibles in JSFiles For Possible XSS\e[0m"
-var_js
-echo -e "\e[36m[\e[32m+\e[36m]\e[92m Scanning JSFiles For Possible DomXSS\e[0m"
-domxss_js
-echo -e "\e[36m[\e[32m+\e[36m]\e[92m Generating Html Report!\e[0m"
-report
+analyse() {
+  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Scanning JSFiles For Possible DomXSS\e[0m"
+  domxss_js
+  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started Finding Secrets in JSFiles\e[0m"
+  secret_js
+}
+
+report() {
+  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Generating Html Report!\e[0m"
   bash report.sh
-dir=$OUTPUT_DIR
-echo -e "\e[36m[\e[32m+\e[36m]\e[92m Generating output directory!\e[0m"
-output
-echo -e "\e[36m[\e[32m+\e[36m]\e[92m Sending report to github project  !\e[0m"
-send_to_issue
+  dir=$OUTPUT_DIR
+  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Generating output directory!\e[0m"
+  output
+  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Sending report to github project  !\e[0m"
+  send_to_issue
+}
+
+recon
+analyse
+report
+
