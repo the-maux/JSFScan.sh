@@ -19,11 +19,11 @@ logo
 #Gather JSFilesUrls
 gather_js() {
   echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Started Gathering JsFiles-links with gau & subjs & hakrawler \e[0m\n"
-  echo -n "Will scan target in file $target, wich are:" && cat $target
+  echo -n "Will scan target in file target.txt, wich are:" && cat target.txt
   echo -n "Number of files found: " && cat jsfile_links.txt | wc -l
-  cat $target | gau | grep -iE "\.js$" | uniq | sort >>jsfile_links.txt
-  cat $target | subjs >> jsfile_links.txt
-  #cat $target | hakrawler -js -depth 2 -scope subs -plain >> jsfile_links.txt
+  cat target.txt | gau | grep -iE "\.js$" | uniq | sort >> jsfile_links.txt
+  cat target.txt | subjs >> jsfile_links.txt
+  #cat target.txt | hakrawler -js -depth 2 -scope subs -plain >> jsfile_links.txt
   echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Checking for live JsFiles-links\e[0m\n"
   cat jsfile_links.txt | httpx -follow-redirects -silent -status-code | grep "[200]" | cut -d ' ' -f1 | sort -u > live_jsfile_links.txt
   echo -n "Number of live js files found: " && cat live_jsfile_links.txt | wc -l
@@ -32,7 +32,7 @@ gather_js() {
 #Open JSUrlFiles
 open_jsurlfile() {
   echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Filtering JsFiles-links\e[0m\n"
-  cat $target | httpx -follow-redirects -silent -status-code | grep "[200]" | cut -d ' ' -f1 | sort -u >live_jsfile_links.txt
+  cat target.txt | httpx -follow-redirects -silent -status-code | grep "[200]" | cut -d ' ' -f1 | sort -u >live_jsfile_links.txt
 }
 
 #Gather Endpoints From JsFiles
@@ -87,7 +87,8 @@ output() {
   mv endpoints.txt jsfile_links.txt jslinksecret.txt live_jsfile_links.txt jswordlist.txt js_var.txt domxss_scan.txt report.html $dir/
   mv jsfiles/ $dir/
 }
-
+target=target.txt
+gather_js()
 endpoint_js()
 secret_js()
 getjsbeautify()
