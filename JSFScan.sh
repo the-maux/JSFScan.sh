@@ -31,7 +31,7 @@ gather_js() {
 
 #Gather Endpoints From JsFiles
 endpoint_js() {
-  interlace -tL urls.txt -threads 5 -c "echo 'starting analyse of _target_ '" --silent # ; echo 'python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> endpoints.txt
+  interlace -tL urls.txt -threads 5 -c "echo 'starting analyse of _target_ '" --silent --no-bar # ; echo 'python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> endpoints.txt
   number_of_endpoint_found=$(cat endpoints.txt | wc -l)
   echo "Number of endpoint found: $((number_of_file_found))"
   if [ $number_of_endpoint_found = "0" ]
@@ -43,14 +43,14 @@ endpoint_js() {
 
 #Gather Secrets From Js Files
 secret_js() {
-  interlace -tL urls.txt -threads 5 -c "python3 ./tools/SecretFinder/SecretFinder.py -i _target_ -o cli >> jslinksecret.txt" --silent
+  interlace -tL urls.txt -threads 5 -c "python3 ./tools/SecretFinder/SecretFinder.py -i _target_ -o cli >> jslinksecret.txt" --silent --no-bar
   echo -n "Number of secrets found: " && cat jslinksecret.txt | wc -l
 }
 
 #Collect Js Files For Maually Search
 getjsbeautify() {
   mkdir -p jsfiles
-  interlace -tL urls.txt -threads 5 -c "bash ./tools/getjsbeautify.sh _target_" --silent
+  interlace -tL urls.txt -threads 5 -c "bash ./tools/getjsbeautify.sh _target_" --silent --no-bar
 #  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Manually Search For Secrets Using gf or grep in out/\e[0m\n"
   echo "List of JS downloaded:" && ls -l ./jsfiles/
 }
@@ -69,7 +69,7 @@ var_js() {
 
 #Find DomXSS
 domxss_js() {
-  interlace -tL urls.txt -threads 5 -c "bash ./tools/findomxss.sh _target_" --silent
+  interlace -tL urls.txt -threads 5 -c "bash ./tools/findomxss.sh _target_" --silent --no-bar
 }
 
 
