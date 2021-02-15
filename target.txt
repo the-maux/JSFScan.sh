@@ -1,1 +1,2 @@
-https://pandao.ru/
+github.com
+static-assets.tesla.com

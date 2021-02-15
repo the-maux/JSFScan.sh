@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Todo check if the output directory already exist, caused it failed if yes
+
 #LOgo
 logo() {
 
@@ -86,7 +88,7 @@ output() {
   mv jsfiles/ $dir/
 }
 
-while getopts ":l:f:esmwvdro:-:" opt; do
+while getopts ":l:f:esmwvdroh:-:" opt; do
   case ${opt} in
   -) case "${OPTARG}" in
 
