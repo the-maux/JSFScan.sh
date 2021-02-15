@@ -3,12 +3,12 @@
 # Todo check if the output directory already exist, caused it failed if yes
 # Todo make a proctection when no .js file are found, to avoir the infinite loop in C.I
 
-echo -e "\e[36m_______ ______ _______ ______                          _     "
-echo -e "(_______/ _____(_______/ _____)                        | |    "
-echo -e "     _ ( (____  _____ ( (____   ____ _____ ____     ___| |__  "
-echo -e " _  | | \____ \|  ___) \____ \ / ___(____ |  _ \   /___|  _ \ "
-echo -e "| |_| | _____) | |     _____) ( (___/ ___ | | | |_|___ | | | |"
-echo -e " \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_| \e[0m\n"
+echo -e "\e[36m _______ ______ _______ ______                          _     \e[0m"
+echo -e "\e[36m(_______/ _____(_______/ _____)                        | |    \e[0m"
+echo -e "\e[36m     _ ( (____  _____ ( (____   ____ _____ ____     ___| |__  \e[0m"
+echo -e "\e[36m _  | | \____ \|  ___) \____ \ / ___(____ |  _ \   /___|  _ \ \e[0m"
+echo -e "\e[36m| |_| | _____) | |     _____) ( (___/ ___ | | | |_|___ | | | |\e[0m"
+echo -e "\e[36m \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_|\e[0m\n"
 
 #Gather JSFilesUrls
 gather_js() {
@@ -22,7 +22,7 @@ gather_js() {
   cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u > urls.txt
   number_of_file_found=$(cat urls.txt | wc -l)
   echo "Number of live js files found: $((number_of_file_found))"
-  if [ number_of_file_found == "0" ]
+  if [ $number_of_file_found = "0" ]
   then
           echo "No file found, Exiting..."
           exit 0
@@ -31,7 +31,8 @@ gather_js() {
 
 #Gather Endpoints From JsFiles
 endpoint_js() {
-  interlace -tL urls.txt -threads 5 -c "echo 'starting analyse of _target_ ' ; echo 'python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> endpoints.txt" --silent
+  cmd="echo 'starting analyse of _target_ ' ; echo 'python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> endpoints.txt"
+  interlace -tL urls.txt -threads 5 -c $cmd --silent
   echo -n "Number of endpoint found: " && cat endpoints.txt | wc -l
 }
 
@@ -97,33 +98,33 @@ send_to_issue() {
 export PYTHONWARNINGS="ignore:Unverified HTTPS request"
 
 recon() {  # Try to gain the maximum of uniq JS file from the target
-  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started Gathering JsFiles-links with gau & subjs & hakrawler \e[0m"
+  echo -e "\e[36m Started Gathering JsFiles-links with gau & subjs & hakrawler \e[0m"
   echo "Searching JSFiles on target(s):" && cat target.txt
   gather_js
-  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started gathering Endpoints\e[0m"
+  echo -e "\e[36m Started gathering Endpoints\e[0m"
   endpoint_js
-#  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started to Gather JSFiles locally for Manual Testing\e[0m"
+#  echo -e "\e[36m Started to Gather JSFiles locally for Manual Testing\e[0m"
 #  getjsbeautify
-#  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started Gathering Words From JsFiles-links For Wordlist.\e[0m"
+#  echo -e "\e[36m Started Gathering Words From JsFiles-links For Wordlist.\e[0m"
 #  wordlist_js
-#  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started Finding Varibles in JSFiles For Possible XSS\e[0m"
+#  echo -e "\e[36m Started Finding Varibles in JSFiles For Possible XSS\e[0m"
 #  var_js
 }
 
 
 analyse() {
-  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Scanning JSFiles For Possible DomXSS\e[0m"
+  echo -e "\e[36m Scanning JSFiles For Possible DomXSS\e[0m"
   domxss_js
-  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Started Finding Secrets in JSFiles\e[0m"
+  echo -e "\e[36m Started Finding Secrets in JSFiles\e[0m"
   secret_js
 }
 
 report() {
-  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Generating Html Report!\e[0m"
+  echo -e "\e[36m Generating Html Report!\e[0m"
   bash report.sh
-  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Generating output directory!\e[0m"
+  echo -e "\e[36m Generating output directory!\e[0m"
   output
-  echo -e "\e[36m[\e[32m+\e[36m]\e[92m Sending report to github project  !\e[0m"
+  echo -e "\e[36m Sending report to github project  !\e[0m"
   send_to_issue
 }
 
