@@ -25,7 +25,7 @@ gather_js() {
   cat target.txt | subjs >> all_urls.txt
   #cat target.txt | hakrawler -js -depth 2 -scope subs -plain >> all_urls.txt
   echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Checking for live JsFiles-links\e[0m\n"
-  cat all_urls.txt | httpx -follow-redirects -status-code | grep "[200]" | cut -d ' ' -f1 | sort -u > urls.txt
+  cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u > urls.txt
   echo -n "Number of live js files found: " && cat urls.txt | wc -l
 }
 
@@ -87,6 +87,8 @@ output() {
   mv -vf endpoints.txt all_urls.txt jslinksecret.txt urls.txt jswordlist.txt js_var.txt domxss_scan.txt report.html $dir/
   mv -v jsfiles/ $dir/
 }
+
+export PYTHONWARNINGS="ignore:Unverified HTTPS request"
 
 gather_js
 endpoint_js
