@@ -1,2 +1,1 @@
-blog.scrt.ch
-forelsec.blogspot.com
+hackerone.com
