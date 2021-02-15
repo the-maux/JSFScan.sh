@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Todo check if the output directory already exist, caused it failed if yes
+# Todo make a proctection when no .js file are found, to avoir the infinite loop in C.I
 
 echo -e "\e[36m_______ ______ _______ ______                          _     "
 echo -e "(_______/ _____(_______/ _____)                        | |    "
@@ -12,14 +13,20 @@ echo -e " \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_| \e[0m\n"
 #Gather JSFilesUrls
 gather_js() {
   cat target.txt | gau | grep -iE "\.js$" | uniq | sort > gau_urls.txt
-  echo "\nWith Gau found: " && cat gau_urls.txt | wc -l
+  echo -e "\n Gau found:  $((cat gau_urls.txt | wc -l)) file(s)"
   cat target.txt | subjs > subjs_url.txt
-  echo "With subjs found: " && cat subjs_url.txt | wc -l && echo -n "Filtering wih httpx for live js"
+  echo -e "subjs found: $((cat subjs_url.txt | wc -l)) file(s)\nFiltering wih httpx for live js"
   #cat target.txt | hakrawler -js -depth 2 -scope subs -plain >> hakrawler_urls.txt
   #echo -n "With subjs found: " && cat hakrawler_urls.txt | wc -l && echo "Filtering wih httpx for live js"
   cat gau_urls.txt > all_urls.txt && cat subjs_url.txt >> all_urls.txt # && cat hakrawler_urls.txt >> all_urls.txt
   cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u > urls.txt
-  echo "Number of live js files found: " && cat urls.txt | wc -l
+  number_of_file_found=$(cat urls.txt | wc -l);
+  echo "Number of live js files found: $((number_of_file_found))"
+  if [ number_of_file_found = 0]
+  then
+          echo "No file found, Exiting..."
+          exit -1
+  fi
 }
 
 #Gather Endpoints From JsFiles
