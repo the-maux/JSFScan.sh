@@ -88,76 +88,83 @@ output() {
   mv jsfiles/ $dir/
 }
 
-while getopts ":l:f:esmwvdroh:-:" opt; do
-  case ${opt} in
-  -) case "${OPTARG}" in
+endpoint_js()
+secret_js()
+getjsbeautify()
+wordlist_js()
+var_js()
+domxss_js()
 
-    all)
-      endpoint_js
-      secret_js
-      getjsbeautify
-      wordlist_js
-      var_js
-      domxss_js
-      ;;
-
-    *)
-      if [ "$OPTERR" = 1 ] && [ "${optspec:0:1}" != ":" ]; then
-        echo "Unknown option --${OPTARG}" >&2
-      fi
-      ;;
-    esac ;;
-
-  l)
-    target=$OPTARG
-    gather_js
-    ;;
-  f)
-    target=$OPTARG
-    open_jsurlfile
-    ;;
-  e)
-    endpoint_js
-    ;;
-  s)
-    secret_js
-    ;;
-  m)
-    getjsbeautify
-    ;;
-  w)
-    wordlist_js
-    ;;
-  v)
-    var_js
-    ;;
-  d)
-    domxss_js
-    ;;
-  r)
-    report
-    ;;
-  o)
-    dir=$OPTARG
-    output
-    ;;
-  \? | h)
-    echo "Usage: "
-    echo "       -l   Gather Js Files Links"
-    echo "       -f   Import File Containing JS Urls"
-    echo "       -e   Gather Endpoints For JSFiles"
-    echo "       -s   Find Secrets For JSFiles"
-    echo "       -m   Fetch Js Files for manual testing"
-    echo "       -o   Make an Output Directory to put all things Together"
-    echo "       -w   Make a wordlist using words from jsfiles"
-    echo "       -v   Extract Vairables from the jsfiles"
-    echo "       -d   Scan for Possible DomXSS from jsfiles"
-    echo "       -r   Generate Scan Report in html"
-    echo "	  --all Scan Everything!"
-    ;;
-  :)
-    echo "Invalid Options $OPTARG require an argument"
-    ;;
-  esac
-done
-shift $((OPTIND - 1))
+#while getopts ":l:f:esmwvdro:-:" opt; do
+#  case ${opt} in
+#  -) case "${OPTARG}" in
+#
+#    all)
+#      endpoint_js
+#      secret_js
+#      getjsbeautify
+#      wordlist_js
+#      var_js
+#      domxss_js
+#      ;;
+#
+#    *)
+#      if [ "$OPTERR" = 1 ] && [ "${optspec:0:1}" != ":" ]; then
+#        echo "Unknown option --${OPTARG}" >&2
+#      fi
+#      ;;
+#    esac ;;
+#
+#  l)
+#    target=$OPTARG
+#    gather_js
+#    ;;
+#  f)
+#    target=$OPTARG
+#    open_jsurlfile
+#    ;;
+#  e)
+#    endpoint_js
+#    ;;
+#  s)
+#    secret_js
+#    ;;
+#  m)
+#    getjsbeautify
+#    ;;
+#  w)
+#    wordlist_js
+#    ;;
+#  v)
+#    var_js
+#    ;;
+#  d)
+#    domxss_js
+#    ;;
+#  r)
+#    report
+#    ;;
+#  o)
+#    dir=$OPTARG
+#    output
+#    ;;
+#  \? | h)
+#    echo "Usage: "
+#    echo "       -l   Gather Js Files Links"
+#    echo "       -f   Import File Containing JS Urls"
+#    echo "       -e   Gather Endpoints For JSFiles"
+#    echo "       -s   Find Secrets For JSFiles"
+#    echo "       -m   Fetch Js Files for manual testing"
+#    echo "       -o   Make an Output Directory to put all things Together"
+#    echo "       -w   Make a wordlist using words from jsfiles"
+#    echo "       -v   Extract Vairables from the jsfiles"
+#    echo "       -d   Scan for Possible DomXSS from jsfiles"
+#    echo "       -r   Generate Scan Report in html"
+#    echo "	  --all Scan Everything!"
+#    ;;
+#  :)
+#    echo "Invalid Options $OPTARG require an argument"
+#    ;;
+#  esac
+#done
+#shift $((OPTIND - 1))
