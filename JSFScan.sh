@@ -112,10 +112,10 @@ recon() {  # Try to gain the maximum of uniq JS file from the target
   endpoint_js
   echo -e "\e[36m[+] Started to Gather JSFiles locally for Manual Testing\e[0m"
   getjsbeautify
-  echo -e "\e[36m[+] Started Gathering Words From JsFiles-links For Wordlist.\e[0m"
-  wordlist_js
-  echo -e "\e[36m[+] Started Finding Varibles in JSFiles For Possible XSS\e[0m"
-  var_js
+#  echo -e "\e[36m[+] Started Gathering Words From JsFiles-links For Wordlist.\e[0m"
+#  wordlist_js
+#  echo -e "\e[36m[+] Started Finding Varibles in JSFiles For Possible XSS\e[0m"
+#  var_js
 }
 
 
