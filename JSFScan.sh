@@ -32,14 +32,14 @@ gather_js() {
 #Gather Endpoints From JsFiles
 endpoint_js() {
   interlace -tL urls.txt -threads 5 -c "python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> all_endpoints.txt" --silent --no-bar
-  cat all_endpoints.txt | uniq | sort > endpoints.txt
-  number_of_endpoint_found=$(cat endpoints.txt | wc -l)
+  number_of_endpoint_found=$(cat all_endpoints.txt | wc -l)
   if [ $number_of_endpoint_found = "0" ]
   then
           echo "No endpoint found, Exiting..."
           exit 1
   fi
-  echo "Number of endpoint found: $((number_of_file_found))"
+  cat all_endpoints.txt | uniq | sort > endpoints.txt
+  echo "Number of endpoint found: $(cat endpoints.txt | wc -l)"
   cat endpoints.txt
 }
 
