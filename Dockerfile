@@ -3,7 +3,7 @@ MAINTAINER bolli95 "maxlukasboll@gmail.com"
 
 # copy all files to the container
 RUN mkdir -p /root/tools
-COPY . /root
+
 WORKDIR /root/tools
 
 # install binary depedencies
@@ -34,5 +34,7 @@ ENV HOME /root
 ENV GOPATH=$HOME/go/bin
 ENV PATH $PATH:$GOPATH
 ENV OUTPUT_DIR=/root/reportDirectory
+
+COPY . /root
 
 CMD ["/bin/bash", "./JSFScan.sh"]
