@@ -1,32 +1,32 @@
-# by m4ll0k
 # github.com/m4ll0k
 
 import sys
-try:
-    import jsbeautifier
-    import requests
-except Exception as e:
-    sys.exit(print("{0}.. please download this module/s".format(e)))
+import jsbeautifier
+import requests
 
-def beauty(content:str)->str:
+
+def beauty(content):
     return jsbeautifier.beautify(content.decode())
 
-def getjs(url:str)->dict:
-    try: return requests.get(url)
-    except: return {'content':None}
 
-def main()->None:
-    try:
-        url = sys.argv[1]
-        output = sys.argv[2]
-    except:
+def getjs(url):
+    http_response = requests.get(url)
+    if http_response.status_code != 200:
+        return None
+    return http_response
+
+
+def main():
+    if len(sys.argv) != 2:
         sys.exit(print("\nUsage:\tpython3 {0} <url> <output>\n".format(sys.argv[0])))
+    url = sys.argv[1]
+    output = sys.argv[2]
     if '.js' in url:
-        r = getjs(url)
-        if r.status_code == 200:
-            js = beauty(r.content)
+        http_response = getjs(url)
+        if http_response is not None:
+            js = beauty(http_response.content)
             if output:
-                _file = open(sys.argv[2],"w")
+                _file = open(sys.argv[2], "w")
                 _file.write(js)
                 _file.close()
                 print("Done! file saved here -> \"{0}\"".format(_file.name))
