@@ -19,10 +19,10 @@ logo
 #Gather JSFilesUrls
 gather_js() {
   echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Started Gathering JsFiles-links with gau & subjs & hakrawler \e[0m\n"
-  echo "Target are:" && cat $target
+  echo -n "Will scan target in file $target, wich are:" && cat $target
+  echo -n "Number of files found: " && cat jsfile_links.txt | wc -l
   cat $target | gau | grep -iE "\.js$" | uniq | sort >>jsfile_links.txt
   cat $target | subjs >> jsfile_links.txt
-  echo -n "Number of files found: " && cat jsfile_links.txt | wc -l
   #cat $target | hakrawler -js -depth 2 -scope subs -plain >> jsfile_links.txt
   echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Checking for live JsFiles-links\e[0m\n"
   cat jsfile_links.txt | httpx -follow-redirects -silent -status-code | grep "[200]" | cut -d ' ' -f1 | sort -u > live_jsfile_links.txt
