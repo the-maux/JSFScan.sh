@@ -54,7 +54,7 @@ getjsbeautify() {
   mkdir -p jsfiles
   interlace -tL urls.txt -threads 5 -c "bash ./tools/getjsbeautify.sh _target_" --silent --no-bar
 #  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Manually Search For Secrets Using gf or grep in out/\e[0m\n"
-  echo "List of JS downloaded:" && ls -l ./jsfiles/
+  echo "List of JS downloaded:"
 }
 
 #Gather JSFilesWordlist
@@ -112,10 +112,10 @@ recon() {  # Try to gain the maximum of uniq JS file from the target
   endpoint_js
   echo -e "\e[36m[+] Started to Gather JSFiles locally for Manual Testing\e[0m"
   getjsbeautify
-#  echo -e "\e[36m[+] Started Gathering Words From JsFiles-links For Wordlist.\e[0m"
-#  wordlist_js
-#  echo -e "\e[36m[+] Started Finding Varibles in JSFiles For Possible XSS\e[0m"
-#  var_js
+  echo -e "\e[36m[+] Started Gathering Words From JsFiles-links For Wordlist.\e[0m"
+  wordlist_js
+  echo -e "\e[36m[+] Started Finding Varibles in JSFiles For Possible XSS\e[0m"
+  var_js
 }
 
 
