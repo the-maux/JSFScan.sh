@@ -34,9 +34,10 @@ WORKDIR /root
 
 ENV HOME /root
 ENV GOPATH=$HOME/go/bin
+ENV OUTPUT_DIR=/root/reportDirectory
 ENV PATH $PATH:$GOPATH
 
 RUN echo "github.com\nstatic-assets.tesla.com" > target.txt
 
-CMD ["/bin/bash", "./JSFScan.sh", "-l", "target.txt", "-all", "-r", "-o", "reportDirectory"]
+CMD ["/bin/bash", "./JSFScan.sh"]
 #bash ./JSFScan.sh -l target.txt --all -r -o Pandao.ru
