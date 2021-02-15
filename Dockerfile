@@ -19,7 +19,7 @@ RUN cat ./Interlace/requirements.txt > requirements.txt
 RUN cat ./SecretFinder/requirements.txt >> requirements.txt
 RUN cat ./LinkFinder/requirements.txt >> requirements.txt
 RUN pip3 install -r requirements.txt
-RUN cd Interlace && ls -l && pwd && python3 ./setup.py install
+RUN cd Interlace && python3 ./setup.py install
 RUN cd LinkFinder && python3 ./setup.py install
 
 RUN go get github.com/tomnomnom/waybackurls

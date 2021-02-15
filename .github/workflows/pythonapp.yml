@@ -11,7 +11,7 @@ jobs:
     - name: Build the Docker image
       run: docker build -t themaux/jsfscan .
     - uses: actions/checkout@v1
-    - name: Unit Test inside docker
+    - name: Start the scan
       run: docker run themaux/jsfscan
 
 

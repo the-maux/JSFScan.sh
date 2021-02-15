@@ -87,14 +87,14 @@ output() {
   mv endpoints.txt jsfile_links.txt jslinksecret.txt live_jsfile_links.txt jswordlist.txt js_var.txt domxss_scan.txt report.html $dir/
   mv jsfiles/ $dir/
 }
-target=target.txt
-gather_js()
-endpoint_js()
-secret_js()
-getjsbeautify()
-wordlist_js()
-var_js()
-domxss_js()
+
+gather_js
+endpoint_js
+secret_js
+getjsbeautify
+wordlist_js
+var_js
+domxss_js
 
 #while getopts ":l:f:esmwvdro:-:" opt; do
 #  case ${opt} in
