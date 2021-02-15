@@ -12,14 +12,14 @@ echo -e "\e[36m \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_|\e[
 
 #Gather JSFilesUrls
 gather_js() {
-  cat target.txt | gau | grep -iE "\.js$" | uniq | sort > gau_urls.txt
+  cat target.txt | gau | grep -iE "\.js$" | sort | uniq > gau_urls.txt
   echo -e "\nGau found:  $(cat gau_urls.txt | wc -l) file(s)"
   cat target.txt | subjs > subjs_url.txt
   echo -e "subjs found: $(cat subjs_url.txt | wc -l) file(s)\nFiltering duplicate and wih httpx removing dead link"
   #cat target.txt | hakrawler -js -depth 2 -scope subs -plain >> hakrawler_urls.txt
   #echo -n "With subjs found: " && cat hakrawler_urls.txt | wc -l && echo "Filtering wih httpx for live js"
   cat gau_urls.txt > all_urls.txt && cat subjs_url.txt >> all_urls.txt # && cat hakrawler_urls.txt >> all_urls.txt
-  cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u > urls.txt
+  cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort | uniq > urls.txt
   number_of_file_found=$(cat urls.txt | wc -l)
   echo "Number of live js files found: $((number_of_file_found))"
   if [ $number_of_file_found = "0" ]
@@ -38,7 +38,7 @@ endpoint_js() {
           echo "No endpoint found, Exiting..."
           exit 1
   fi
-  cat all_endpoints.txt | uniq | sort > endpoints.txt
+  cat all_endpoints.txt | sort | uniq > endpoints.txt
   echo "Number of endpoint found: $(cat endpoints.txt | wc -l)"
   cat endpoints.txt
 }
