@@ -5,7 +5,7 @@ import jsbeautifier
 import requests
 import json
 
-URLS_FILE_PATH = "./urls_tmp.txt"
+URLS_FILE_PATH = "./tools/urls_tmp.txt"
 
 
 def getjs(url):
@@ -30,7 +30,7 @@ def new_way():
             if response is not None:
                 rax = rax + 1
                 js = jsbeautifier.beautify(response.content.decode())
-                with open(f"./jsfiles/file-{rax}", "w") as outfile:
+                with open(f"./tools/jsfiles/file-{rax}", "w") as outfile:
                     json.dump(js, outfile)
                 print(f"Done! file saved here -> {outfile}", flush=True)
 
