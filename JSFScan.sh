@@ -116,12 +116,12 @@ recon() {  # Try to gain the maximum of uniq JS file from the target
   getjsbeautify
   echo -e "\e[36m[+] Started Gathering Words From JsFiles-links For Wordlist.\e[0m"
   wordlist_js
-  echo -e "\e[36m[+] Started Finding Varibles in JSFiles For Possible XSS\e[0m"
-  var_js
 }
 
 
 analyse() {
+  echo -e "\e[36m[+] Started Finding Varibles in JSFiles For Possible XSS\e[0m"
+  var_js
   echo -e "\e[36m[+] Scanning JSFiles For Possible DomXSS\e[0m"
   domxss_js
   echo -e "\e[36m[+]  Started Finding Secrets in JSFiles\e[0m"
