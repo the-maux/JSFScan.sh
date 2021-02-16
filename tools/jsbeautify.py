@@ -54,15 +54,15 @@ def new_way():
     listOfurlsSplitted = list(split(urls, 5))
     print(f'Preparing {len(listOfurlsSplitted)} Thread')
     for listOfurls in listOfurlsSplitted:
-        t = Thread(target=thread_func, args=(listOfurls))
+        t = Thread(target=thread_func, args=(listOfurls,))
         listOfThread.append(t)
         t.start()
     print("Waiting for thread to end")
     for thread in listOfThread:
         thread.join()
-    os.system('ls -l ./tools/jsfiles/')
+    os.system('ls -l /root/jsfiles/')
     print("------------Dump of JS file over--------------")
-    os.system('ls -lR ')
+
 
 if __name__ == "__main__":
     new_way()
