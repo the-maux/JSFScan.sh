@@ -62,13 +62,13 @@ wordlist_js() {
   cat urls.txt | python3 ./tools/getjswords.py >> temp_jswordlist.txt
   cat temp_jswordlist.txt | sort -u >> jswordlist.txt
   echo "getjswords found $(cat jswordlist.txt | wc -l) JSWord(s)"
-  cat jswordlist.txt
   rm temp_jswordlist.txt
 }
 
 #Gather Variables from JSFiles For Xss
 var_js() {
   cat urls.txt | while read url; do bash ./tools/jsvar.sh $url | tee -a js_var.txt; done
+  echo "Search var for xss found $(cat js_var.txt | wc -l) JSWord(s)"
 }
 
 #Find DomXSS
@@ -114,10 +114,10 @@ recon() {  # Try to gain the maximum of uniq JS file from the target
 #  endpoint_js
 #  echo -e "\e[36m[+] Started to Gather JSFiles locally for Manual Testing\e[0m"
 #  getjsbeautify
-  echo -e "\e[36m[+] Started Gathering Words From JsFiles-links For Wordlist.\e[0m"
-  wordlist_js
-#  echo -e "\e[36m[+] Started Finding Varibles in JSFiles For Possible XSS\e[0m"
-#  var_js
+#  echo -e "\e[36m[+] Started Gathering Words From JsFiles-links For Wordlist.\e[0m"
+#  wordlist_js
+  echo -e "\e[36m[+] Started Finding Varibles in JSFiles For Possible XSS\e[0m"
+  var_js
 }
 
 
