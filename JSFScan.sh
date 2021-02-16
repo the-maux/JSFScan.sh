@@ -24,7 +24,7 @@ gather_js() {
   echo "Number of live js files found: $((number_of_file_found))"
   if [ $number_of_file_found = "0" ]
   then
-          echo "No file found, Exiting..."
+          echo "(WARNING) No JS file found during recon, Exiting..."
           exit 1
   fi
 }
@@ -35,8 +35,7 @@ endpoint_js() {
   number_of_endpoint_found=$(cat all_endpoints.txt | wc -l)
   if [ $number_of_endpoint_found = "0" ]
   then
-          echo "No endpoint found, Exiting..."
-          exit 1
+          echo "(WARNING) No endpoint found"
   fi
   cat all_endpoints.txt | sort | uniq > endpoints.txt
   echo "Number of endpoint found: $(cat endpoints.txt | wc -l)"
