@@ -1,7 +1,8 @@
-filename=$(echo $1 | awk -F/ '{print $(NF-0)}')
+filename=$(echo $1 | awk -F/ "{print $(NF-0)}")
 echo "AAAAAAAAAAAAAAAA"
-echo "jsbeautify ouput: $((filename))"
-echo "BBBBBBBBBBBBBBBB"
+ls
+echo "BBBBBBBBBBBBBBB"
+echo $filename
 python3 ./tools/jsbeautify.py $1 $filename
 echo "CCCCCCCCCCCCCCCC"
-mv "$filename" ./jsfiles/
+mv $filename ./jsfiles/
