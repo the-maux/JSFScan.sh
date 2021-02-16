@@ -18,6 +18,7 @@ def getjs(url):
 
 
 def main():
+    print(len(sys.argv))
     if len(sys.argv) != 3:
         sys.exit(print("\nUsage:\tpython3 {0} <url> <output>\n".format(sys.argv[0])))
     url = sys.argv[1]
