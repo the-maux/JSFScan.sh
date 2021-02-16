@@ -10,6 +10,5 @@ jobs:
     - uses: actions/checkout@v1
     - name: Build the Docker image
       run: docker build -t themaux/jsfscan:local .
-    - uses: actions/checkout@v1
     - name: Start the scan
       run: docker run -e GITHUB_PASSWD="${{ secrets.GITHUB_TOKEN }}" themaux/jsfscan:local

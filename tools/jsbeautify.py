@@ -27,7 +27,7 @@ def main():
             _file = open(sys.argv[2], "w")
             _file.write(js)
             _file.close()
-            #print("Done! file saved here -> \"{0}\"".format(_file.name))
+            print("Done! file saved here -> \"{0}\"".format(_file.name))
     else:
         sys.exit(print("\".js\" not found in URL ({}).. check your url".format(sys.argv[1])))
 
