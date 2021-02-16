@@ -53,7 +53,7 @@ secret_js() {
 getjsbeautify() {
   mkdir -p jsfiles
   echo "-----------------------------------------------------------------------------"
-  head -1 urls.txt > urls_tmp.txt
+  head -5 urls.txt > urls_tmp.txt
   interlace -tL urls_tmp.txt -threads 1 -c "bash ./tools/getjsbeautify.sh _target_" --silent --no-bar
   echo "-----------------------------------------------------------------------------"
   #ls -Rl .
