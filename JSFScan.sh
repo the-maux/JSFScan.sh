@@ -52,7 +52,8 @@ secret_js() {
 #Collect Js Files For Maually Search
 getjsbeautify() {
   mkdir -p jsfiles
-  interlace -tL urls.txt -threads 5 -c "bash ./tools/getjsbeautify.sh _target_" --silent --no-bar
+  head -5 script.bash > urls_tmp.txt
+  interlace -tL urls_tmp.txt -threads 1 -c "echo './tools/getjsbeautify.sh _target_'" --silent --no-bar
 #  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Manually Search For Secrets Using gf or grep in out/\e[0m\n"
   echo "Getjsbeautify downloaded $(ls -l ./jsfiles/ | wc -l) files"
 }
