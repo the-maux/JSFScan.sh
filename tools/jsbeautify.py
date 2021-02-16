@@ -32,8 +32,8 @@ def thread_func(urls):
                     with open(f"./tools/jsfiles/{nameFile}", "w") as outfile:
                         json.dump(js, outfile)
                     print(f"Done! file saved here -> {outfile.name}", flush=True)
-    except Exception:
-        print('(ERROR) in thread')
+    except Exception as e:
+        print(f'(ERROR) in thread: {e}')
     print("THREAD ENDING")
 
 
