@@ -56,9 +56,9 @@ getjsbeautify() {
   head -5 urls.txt > urls_tmp.txt
   interlace -tL urls_tmp.txt -threads 5 -c "bash ./tools/getjsbeautify.sh _target_  >> jsfound.txt" --no-bar --silent
   echo "-----------------------------------------------------------------------------"
-  ls -Rl ./jsfiles
+  ls -Rl /root/jsfiles/
 #  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Manually Search For Secrets Using gf or grep in out/\e[0m\n"
-  echo "Getjsbeautify downloaded: $(ls -l ./jsfiles/ | wc -l) files"
+  echo "Getjsbeautify downloaded: $(ls -l /root/jsfiles/ | wc -l) files"
 }
 
 #Gather JSFilesWordlist
@@ -142,7 +142,5 @@ report() {
 recon
 #analyse
 #report
-
-cat jsfound.txt
 
 echo "JSFScan is Closing"
