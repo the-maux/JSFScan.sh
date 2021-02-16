@@ -20,9 +20,10 @@ gather_js() {
   #echo -n "With subjs found: " && cat hakrawler_urls.txt | wc -l && echo "Filtering wih httpx for live js"
   cat gau_urls.txt > all_urls.txt && cat subjs_url.txt >> all_urls.txt # && cat hakrawler_urls.txt >> all_urls.txt
   cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u > urls_all.txt
+  head -50 urls_all.txt > urls.txt
   number_of_file_found=$(cat urls.txt | wc -l)
   echo "Number of live js files found: $((number_of_file_found))"
-  head -50 urls_all.txt > urls.txt
+
   if [ $number_of_file_found = "0" ]
   then
           echo "(WARNING) No JS file found during recon, Exiting..."
