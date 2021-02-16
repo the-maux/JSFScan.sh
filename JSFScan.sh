@@ -59,6 +59,7 @@ getjsbeautify() {
   ls -Rl /root/jsfiles/
 #  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Manually Search For Secrets Using gf or grep in out/\e[0m\n"
   echo "Getjsbeautify downloaded: $(ls -l /root/jsfiles/ | wc -l) files"
+  cat jsfound.txt
 }
 
 #Gather JSFilesWordlist
