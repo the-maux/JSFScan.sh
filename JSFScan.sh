@@ -12,16 +12,17 @@ echo -e "\e[36m \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_|\e[
 
 #Gather JSFilesUrls
 gather_js() {
-  cat target.txt | gau | grep -iE "\.js$" | sort | uniq > gau_urls.txt
+  cat target.txt | gau | grep -iE "\.js$" | sort -u > gau_urls.txt
   echo -e "\nGau found:  $(cat gau_urls.txt | wc -l) file(s)"
   cat target.txt | subjs > subjs_url.txt
   echo -e "subjs found: $(cat subjs_url.txt | wc -l) file(s)\nFiltering duplicate and wih httpx removing dead link"
   #cat target.txt | hakrawler -js -depth 2 -scope subs -plain >> hakrawler_urls.txt
   #echo -n "With subjs found: " && cat hakrawler_urls.txt | wc -l && echo "Filtering wih httpx for live js"
   cat gau_urls.txt > all_urls.txt && cat subjs_url.txt >> all_urls.txt # && cat hakrawler_urls.txt >> all_urls.txt
-  cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort | uniq > urls.txt
+  cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u > urls.txt
   number_of_file_found=$(cat urls.txt | wc -l)
   echo "Number of live js files found: $((number_of_file_found))"
+  head -50 urls.txt > ./urls.txt
   if [ $number_of_file_found = "0" ]
   then
           echo "(WARNING) No JS file found during recon, Exiting..."
@@ -35,7 +36,7 @@ endpoint_js() {
   number_of_endpoint_found=$(cat all_endpoints.txt | wc -l)
   if [ $number_of_endpoint_found = "0" ]
   then
-          echo "(WARNING) No endpoint found"
+      echo "(WARNING) No endpoint found"
   fi
   cat all_endpoints.txt | sort | uniq > endpoints.txt
   echo "Number of endpoint found: $(cat endpoints.txt | wc -l)"
@@ -51,7 +52,6 @@ secret_js() {
 #Collect Js Files For Maually Search
 getjsbeautify() {
   mkdir -p /root/jsfiles
-  head -50 urls.txt > ./tools/urls_tmp.txt
   python3 ./tools/jsbeautify.py
   echo "Getjsbeautify downloaded: $(ls -l /root/jsfiles/ | wc -l) files"
 }
@@ -60,6 +60,8 @@ getjsbeautify() {
 wordlist_js() {
   cat urls.txt | python3 ./tools/getjswords.py >> temp_jswordlist.txt
   cat temp_jswordlist.txt | sort -u >> jswordlist.txt
+  echo "getjswords found $(cat jswordlist.txt | wc -l) JSWord(s)"
+  cat jswordlist.txt
   rm temp_jswordlist.txt
 }
 
@@ -109,10 +111,10 @@ recon() {  # Try to gain the maximum of uniq JS file from the target
   gather_js
 #  echo -e "\e[36m[+] Started gathering Endpoints\e[0m"
 #  endpoint_js
-  echo -e "\e[36m[+] Started to Gather JSFiles locally for Manual Testing\e[0m"
-  getjsbeautify
-#  echo -e "\e[36m[+] Started Gathering Words From JsFiles-links For Wordlist.\e[0m"
-#  wordlist_js
+#  echo -e "\e[36m[+] Started to Gather JSFiles locally for Manual Testing\e[0m"
+#  getjsbeautify
+  echo -e "\e[36m[+] Started Gathering Words From JsFiles-links For Wordlist.\e[0m"
+  wordlist_js
 #  echo -e "\e[36m[+] Started Finding Varibles in JSFiles For Possible XSS\e[0m"
 #  var_js
 }

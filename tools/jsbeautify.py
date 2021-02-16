@@ -1,13 +1,10 @@
 # github.com/m4ll0k
-
-import sys
 import jsbeautifier
 import requests
 import json
-import os
 from threading import Thread
 
-URLS_FILE_PATH = "./tools/urls_tmp.txt"
+URLS_FILE_PATH = "./urls.txt"
 PATH_TO_JSDUMP = "/root/jsfiles/"
 
 
@@ -50,7 +47,6 @@ def new_way():
         t.start()
     for thread in listOfThread:
         thread.join()
-    print("------------Dump of JS file over--------------")
 
 
 if __name__ == "__main__":
