@@ -12,6 +12,7 @@ def beauty(content):
 def getjs(url):
     http_response = requests.get(url, verify=False)
     if http_response.status_code != 200:
+        print("(ERROR) While downloading:" + url)
         return None
     return http_response
 
@@ -20,7 +21,7 @@ def main():
     if len(sys.argv) != 3:
         sys.exit(print("\nUsage:\tpython3 {0} <url> <output>\n".format(sys.argv[0])))
     url = sys.argv[1]
-    if '.js' in url:
+    if url.endswith('.js'):
         http_response = getjs(url)
         if http_response is not None:
             js = beauty(http_response.content)
