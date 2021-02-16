@@ -19,6 +19,7 @@ def getjs(url):
 
 
 def thread_func(urls):
+    print("THREAD STARTING")
     for url in urls:
         if url.endswith('.js'):
             response = getjs(url)
@@ -38,19 +39,22 @@ def split(a, n):
 def new_way():
     urls = list()
     listOfThread = list()
+    print("Parsing urls.txt")
     with open(URLS_FILE_PATH, 'r') as f:
         for line in f:
             urls.append(line.strip())
+    print(f"Found {len(urls)} possible url")
 
     listOfurlsSplitted = list(split(urls, 5))
-
+    print(f'Preparing {len(listOfurlsSplitted)} Thread')
     for listOfurls in listOfurlsSplitted:
         t = Thread(target=thread_func, args=(listOfurls))
         listOfThread.append(t)
         t.start()
+    print("Waiting for thread to end")
     for thread in listOfThread:
         thread.join()
-
+    print("Dump of JS file over")
 
 if __name__ == "__main__":
     new_way()
