@@ -18,21 +18,23 @@ def getjs(url):
     return http_response
 
 
-def main():
+if __name__ == "__main__":
     if len(sys.argv) != 3:
         sys.exit(print("\nUsage:\tpython3 {0} <url> <output>\n".format(sys.argv[0])))
-    url = sys.argv[1]
-    if url.endswith('.js'):
-        http_response = getjs(url)
-        if http_response is not None:
-            js = beauty(http_response.content)
-            _file = open(sys.argv[2], "w")
-            _file.write(js)
-            _file.close()
-            print("Done! file saved here -> \"{0}\"".format(_file.name), flush=True)
+    try:
+        url = sys.argv[1]
+        if url.endswith('.js'):
+            response = getjs(url)
+            if response is not None:
+                js = beauty(response.content)
+                _file = open(sys.argv[2], "w")
+                _file.write(js)
+                _file.close()
+                print("Done! file saved here -> \"{0}\"".format(_file.name), flush=True)
+            else:
+                print("Cant continue", flush=True)
         else:
-            print("Cant continue", flush=True)
-    else:
-        print("\".js\" not found in URL ({}).. check your url".format(sys.argv[1]), flush=True)
+            print("\".js\" not found in URL ({}).. check your url".format(sys.argv[1]), flush=True)
+    except Exception:
+        print("(ERROR) Unknow error with " + sys.argv[2], flush=True)
 
-main()
