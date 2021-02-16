@@ -51,8 +51,8 @@ secret_js() {
 
 #Collect Js Files For Maually Search
 getjsbeautify() {
-  mkdir -p jsfiles
-  head -5 urls.txt > urls_tmp.txt
+  mkdir -p ./tools/jsfiles
+  head -5 urls.txt > ./tools/urls_tmp.txt
   python3 ./tools/jsbeautify.py
   echo "Getjsbeautify downloaded: $(ls -l /root/jsfiles/ | wc -l) files"
 
@@ -139,5 +139,4 @@ report() {
 recon
 #analyse
 #report
-cat /root/jsfound.txt
 echo "JSFScan is Closing"
