@@ -54,7 +54,7 @@ getjsbeautify() {
   mkdir -p jsfiles
   echo "-----------------------------------------------------------------------------"
   head -5 urls.txt > urls_tmp.txt
-  interlace -tL urls_tmp.txt -threads 1 -c "bash ./tools/getjsbeautify.sh _target_" --no-bar
+  interlace -tL urls_tmp.txt -threads 5 -c "bash ./tools/getjsbeautify.sh _target_" --no-bar --silent
   echo "-----------------------------------------------------------------------------"
   ls -Rl ./jsfiles
 #  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Manually Search For Secrets Using gf or grep in out/\e[0m\n"
@@ -142,4 +142,4 @@ report() {
 recon
 #analyse
 #report
-
+echo "JSFScan is Closing"
