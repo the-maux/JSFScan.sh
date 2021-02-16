@@ -52,14 +52,13 @@ secret_js() {
 #Collect Js Files For Maually Search
 getjsbeautify() {
   mkdir -p jsfiles
-  cat ./tools/getjsbeautify.sh
-#  echo "-----------------------------------------------------------------------------"
-#  head -5 urls.txt > urls_tmp.txt
-#  interlace -tL urls_tmp.txt -threads 1 -c "echo './tools/getjsbeautify.sh _target_'" --silent --no-bar
-#  echo "-----------------------------------------------------------------------------"
-#  ls ./jsfiles
+  echo "-----------------------------------------------------------------------------"
+  head -5 urls.txt > urls_tmp.txt
+  interlace -tL urls_tmp.txt -threads 1 -c "echo './tools/getjsbeautify.sh _target_'" --silent --no-bar
+  echo "-----------------------------------------------------------------------------"
+  ls ./jsfiles
 #  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Manually Search For Secrets Using gf or grep in out/\e[0m\n"
-  echo "Getjsbeautify downloaded $(ls -l ./jsfiles/ | wc -l) files"
+  echo "Getjsbeautify downloaded: $(ls -l ./jsfiles/ | wc -l) files"
 }
 
 #Gather JSFilesWordlist
