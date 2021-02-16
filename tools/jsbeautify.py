@@ -3,10 +3,9 @@
 import sys
 import jsbeautifier
 import requests
+import json
 
-
-def beauty(content):
-    return jsbeautifier.beautify(content.decode())
+URLS_FILE_PATH = "./urls_tmp.py"
 
 
 def getjs(url):
@@ -18,23 +17,23 @@ def getjs(url):
     return http_response
 
 
-if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        sys.exit(print("\nUsage:\tpython3 {0} <url> <output>\n".format(sys.argv[0])))
-    try:
-        url = sys.argv[1]
+def new_way():
+    urls = list()
+    with open(URLS_FILE_PATH, 'r') as f:
+        for line in f:
+            urls.append(line)
+    print(urls)
+    rax = 0
+    for url in urls:
         if url.endswith('.js'):
             response = getjs(url)
             if response is not None:
-                js = beauty(response.content)
-                _file = open(sys.argv[2], "w")
-                _file.write(js)
-                _file.close()
-                print("Done! file saved here -> \"{0}\"".format(_file.name), flush=True)
-            else:
-                print("Cant continue", flush=True)
-        else:
-            print("\".js\" not found in URL ({}).. check your url".format(sys.argv[1]), flush=True)
-    except Exception:
-        print("(ERROR) Unknow error with " + sys.argv[2], flush=True)
+                rax = rax + 1
+                js = jsbeautifier.beautify(response.content.decode())
+                with open(f"./jsfiles/file-{rax}", "w") as outfile:
+                    json.dump(js, outfile)
+                print(f"Done! file saved here -> {outfile}", flush=True)
 
+
+if __name__ == "__main__":
+    new_way()
