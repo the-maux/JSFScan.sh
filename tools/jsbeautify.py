@@ -30,6 +30,7 @@ def thread_func(urls):
                 with open(f"./tools/jsfiles/{nameFile}", "w") as outfile:
                     json.dump(js, outfile)
                 print(f"Done! file saved here -> {outfile.name}", flush=True)
+    print("THREAD ENDING")
 
 
 def split(a, n):
@@ -56,7 +57,8 @@ def new_way():
     for thread in listOfThread:
         thread.join()
     os.system('ls -l ./tools/jsfiles/')
-    print("Dump of JS file over")
+    print("------------Dump of JS file over--------------")
+    os.system('ls -lR ')
 
 if __name__ == "__main__":
     new_way()
