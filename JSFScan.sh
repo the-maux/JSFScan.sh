@@ -110,12 +110,12 @@ recon() {  # Try to gain the maximum of uniq JS file from the target
   echo -e "\e[36m[+] Started Gathering JsFiles-links with gau & subjs & hakrawler \e[0m"
   echo "Searching JSFiles on target(s):" && cat target.txt
   gather_js
-#  echo -e "\e[36m[+] Started gathering Endpoints\e[0m"
-#  endpoint_js
-#  echo -e "\e[36m[+] Started to Gather JSFiles locally for Manual Testing\e[0m"
-#  getjsbeautify
-#  echo -e "\e[36m[+] Started Gathering Words From JsFiles-links For Wordlist.\e[0m"
-#  wordlist_js
+  echo -e "\e[36m[+] Started gathering Endpoints\e[0m"
+  endpoint_js
+  echo -e "\e[36m[+] Started to Gather JSFiles locally for Manual Testing\e[0m"
+  getjsbeautify
+  echo -e "\e[36m[+] Started Gathering Words From JsFiles-links For Wordlist.\e[0m"
+  wordlist_js
   echo -e "\e[36m[+] Started Finding Varibles in JSFiles For Possible XSS\e[0m"
   var_js
 }
