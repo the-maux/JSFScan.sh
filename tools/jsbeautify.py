@@ -5,7 +5,7 @@ import jsbeautifier
 import requests
 import json
 
-URLS_FILE_PATH = "./urls_tmp.py"
+URLS_FILE_PATH = "./urls_tmp.txt"
 
 
 def getjs(url):
