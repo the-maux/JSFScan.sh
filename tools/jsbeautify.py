@@ -21,8 +21,8 @@ def new_way():
     urls = list()
     with open(URLS_FILE_PATH, 'r') as f:
         for line in f:
-            urls.append(line)
-    print(urls)
+            urls.append(line.strip())
+
     rax = 0
     for url in urls:
         if url.endswith('.js'):

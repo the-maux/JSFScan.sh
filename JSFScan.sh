@@ -54,7 +54,7 @@ getjsbeautify() {
   head -5 urls.txt > ./tools/urls_tmp.txt
   python3 ./tools/jsbeautify.py
   echo "Getjsbeautify downloaded: $(ls -l /root/tools/jsfiles/ | wc -l) files"
-
+  ls -l /root/tools/jsfiles/
 }
 
 #Gather JSFilesWordlist
