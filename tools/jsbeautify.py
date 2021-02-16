@@ -11,7 +11,7 @@ def beauty(content):
 
 def getjs(url):
     http_response = requests.get(url, verify=False)
-    if http_response.status_code != 200:
+    if http_response.content is None:
         print("(ERROR) While downloading:" + url)
         return None
     return http_response
