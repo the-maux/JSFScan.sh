@@ -52,11 +52,12 @@ secret_js() {
 #Collect Js Files For Maually Search
 getjsbeautify() {
   mkdir -p jsfiles
-  echo "-----------------------------------------------------------------------------"
-  head -5 urls.txt > urls_tmp.txt
-  interlace -tL urls_tmp.txt -threads 1 -c "echo './tools/getjsbeautify.sh _target_'" --silent --no-bar
-  echo "-----------------------------------------------------------------------------"
-  ls ./jsfiles
+  cat ./tools/getjsbeautify.sh
+#  echo "-----------------------------------------------------------------------------"
+#  head -5 urls.txt > urls_tmp.txt
+#  interlace -tL urls_tmp.txt -threads 1 -c "echo './tools/getjsbeautify.sh _target_'" --silent --no-bar
+#  echo "-----------------------------------------------------------------------------"
+#  ls ./jsfiles
 #  echo -e "\n\e[36m[\e[32m+\e[36m]\e[92m Manually Search For Secrets Using gf or grep in out/\e[0m\n"
   echo "Getjsbeautify downloaded $(ls -l ./jsfiles/ | wc -l) files"
 }
@@ -111,8 +112,8 @@ export PYTHONWARNINGS="ignore:Unverified HTTPS request"
 recon() {  # Try to gain the maximum of uniq JS file from the target
   echo -e "\e[36m[+] Started Gathering JsFiles-links with gau & subjs & hakrawler \e[0m"
   echo "Searching JSFiles on target(s):" && cat target.txt
-  gather_js
-  echo -e "\e[36m[+] Started gathering Endpoints\e[0m"
+#  gather_js
+#  echo -e "\e[36m[+] Started gathering Endpoints\e[0m"
   endpoint_js
   echo -e "\e[36m[+] Started to Gather JSFiles locally for Manual Testing\e[0m"
   getjsbeautify
