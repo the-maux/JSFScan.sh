@@ -50,10 +50,10 @@ secret_js() {
 
 #Collect Js Files For Maually Search
 getjsbeautify() {
-  mkdir -p ./jsfiles
+  mkdir -p /root/jsfiles
   head -10 urls.txt > ./tools/urls_tmp.txt
   python3 ./tools/jsbeautify.py
-  echo "Getjsbeautify downloaded: $(ls -l /root/tools/jsfiles/ | wc -l) files"
+  echo "Getjsbeautify downloaded: $(ls -l /root/jsfiles/ | wc -l) files"
 }
 
 #Gather JSFilesWordlist

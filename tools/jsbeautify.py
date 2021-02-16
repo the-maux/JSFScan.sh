@@ -29,7 +29,7 @@ def thread_func(urls):
                 if response is not None:
                     js = jsbeautifier.beautify(response.content.decode())
                     nameFile = url.split('/')[-1]
-                    with open(f"./tools/jsfiles/{nameFile}", "w") as outfile:
+                    with open(f"/root/jsfiles/{nameFile}", "w") as outfile:
                         json.dump(js, outfile)
                     print(f"Done! file saved here -> {outfile.name}", flush=True)
     except Exception as e:
