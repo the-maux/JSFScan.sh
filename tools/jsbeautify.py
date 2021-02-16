@@ -20,16 +20,20 @@ def getjs(url):
 
 
 def thread_func(urls):
-    print("THREAD STARTING")
-    for url in urls:
-        if url.endswith('.js'):
-            response = getjs(url)
-            if response is not None:
-                js = jsbeautifier.beautify(response.content.decode())
-                nameFile = url.split('/')[-1]
-                with open(f"./tools/jsfiles/{nameFile}", "w") as outfile:
-                    json.dump(js, outfile)
-                print(f"Done! file saved here -> {outfile.name}", flush=True)
+    print(f"THREAD STARTING for {urls}")
+    try:
+        for url in urls:
+            print(f"------- STARTING for {url}")
+            if url.endswith('.js'):
+                response = getjs(url)
+                if response is not None:
+                    js = jsbeautifier.beautify(response.content.decode())
+                    nameFile = url.split('/')[-1]
+                    with open(f"./tools/jsfiles/{nameFile}", "w") as outfile:
+                        json.dump(js, outfile)
+                    print(f"Done! file saved here -> {outfile.name}", flush=True)
+    except Exception:
+        print('(ERROR) in thread')
     print("THREAD ENDING")
 
 
