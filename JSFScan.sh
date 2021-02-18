@@ -137,6 +137,6 @@ report() {
 }
 
 recon
-#analyse
+analyse
 #report
 echo "JSFScan is Closing"
