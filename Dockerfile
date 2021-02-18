@@ -6,7 +6,7 @@
 #
 #WORKDIR /root/tools
 #
-## install binary depedencies
+# install binary depedencies
 #RUN apt -y update && apt -y install git wget python3 python3-pip
 #
 ## install python tools
@@ -27,15 +27,15 @@
 #RUN GO111MODULE=on go get -v github.com/lc/subjs
 #RUN GO111MODULE=on go get -v github.com/projectdiscovery/httpx/cmd/httpx
 #RUN GO111MODULE=on go get -v github.com/hakluke/hakrawler
-#
-#WORKDIR /root
-#
-#ENV HOME /root
-#ENV GOPATH=$HOME/go/bin
-#ENV PATH $PATH:$GOPATH
-#ENV OUTPUT_DIR=/root/reportDirectory
+##
+##WORKDIR /root
+##
+##ENV HOME /root
+##ENV GOPATH=$HOME/go/bin
+##ENV PATH $PATH:$GOPATH
+##ENV OUTPUT_DIR=/root/reportDirectory
 
-#TOKNOW: Config is herited from image themaux/jsfscan on docker.io (i was tired to always wait the build)
+#TOKNOW: Config is herited from image themaux/jsfscan on docker.io (i was tired to always wait the full build)
 FROM themaux/jsfscan:latest
 
 COPY . /root
