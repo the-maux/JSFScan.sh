@@ -14,12 +14,13 @@ echo -e "\e[36m \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_|\e[
 
 #Gather JSFilesUrls
 gather_js() {
+  line=$(head -n 1 filename)
   cat target.txt | gau | grep -iE "\.js$" | sort -u > gau_urls.txt
   echo -e "\nGau found:  $(cat gau_urls.txt | wc -l) file(s)"
   cat gau_urls.txt | subjs > subjs_url.txt
   echo -e "subjs found: $(cat subjs_url.txt | wc -l) file(s)"
-  #assetfinder -subs-only $DOMAIN -silent | httpx -timeout 3 -threads 300 --follow-redirects -silent | xargs -I% -P10 sh -c 'hakrawler -plain -linkfinder -depth 5 -url %' | awk '{print $3}' | grep -E "\.js(?:onp?)?$" | anew > assetfinder_urls.txt
-  #echo -e "assetfinder found: $(cat assetfinder_urls.txt | wc -l) file(s)"
+  assetfinder -subs-only $DOMAIN -silent | httpx -timeout 3 -threads 300 --follow-redirects -silent | xargs -I% -P10 sh -c 'hakrawler -plain -linkfinder -depth 5 -url %' | awk '{print $3}' | grep -E "\.js(?:onp?)?$" | anew > assetfinder_urls.txt
+  echo -e "assetfinder found: $(cat assetfinder_urls.txt | wc -l) file(s)"
   # gospider -a -w -r -S target.txt -d 3 | grep -Eo "(http|https)://[^/\"].*\.js+" | sed "s#\] \- #\n#g" > gospider_url.txt
   #echo -e "gospider found: $(cat gospider_url.txt | wc -l) file(s)"
   cat target.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
@@ -122,12 +123,12 @@ recon() {  # Try to gain the maximum of uniq JS file from the target
   endpoint_js
   echo -e "\e[36m[+] Started to Gather JSFiles locally for Manual Testing\e[0m"
   getjsbeautify
-  echo -e "\e[36m[+] Started Gathering Words From JsFiles-links For Wordlist.\e[0m"
-  wordlist_js
 }
 
 
 analyse() {
+  echo -e "\e[36m[+] Started Gathering Words From JsFiles-links For Wordlist.\e[0m"
+  wordlist_js
   echo -e "\e[36m[+] Started Finding Varibles in JSFiles For Possible XSS\e[0m"
   var_js
   echo -e "\e[36m[+] Scanning JSFiles For Possible DomXSS\e[0m"
