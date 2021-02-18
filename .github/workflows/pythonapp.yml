@@ -3,9 +3,9 @@ name: JSFScan
 on: [push]
 
 jobs:
-  build:
+  JSFScan:
 
-    runs-on: ubuntu-latest
+    runs-on: themaux/jsfscan
     steps:
     - uses: actions/checkout@v1
     - name: Build the Docker image
