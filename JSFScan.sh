@@ -41,7 +41,12 @@ use_recontools_individualy() {
 
 recon_js_url() {
   use_recontools_individualy # result in gau_solo_urls.txt subjs_url.txt hakrawler_urls.txt gospider_url.txt
-  { cat gau_solo_urls.txt;cat gau_solo_urls.txt;cat subjs_url.txt; cat hakrawler_urls.txt;cat gospider_url.txt;cat subjs.txt } >> all_urls.txt
+  cat gau_solo_urls.txt >> all_urls.txt;
+  cat gau_solo_urls.txt >> all_urls.txt;
+  cat subjs_url.txt >> all_urls.txt;
+  cat hakrawler_urls.txt >> all_urls.txt;
+  cat gospider_url.txt >> all_urls.txt;
+  cat subjs.txt >> all_urls.txt
   echo "(INFO) Removing dead links with httpx & filtering duplicate url"
   cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u | grep -v '?v=' > urls_alive.txt
   cat urls_alive.txt | grep -v "jquery" > urls.txt  # filtering classic lib with no impact
