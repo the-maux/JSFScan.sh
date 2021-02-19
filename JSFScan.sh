@@ -13,7 +13,6 @@ echo -e "\e[36m \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_|\e[
 
 ############################################  RECON PART   #############################################################
 
-
 combine_assetfinder_gau_subjs() {  # mixing assetfinder + gau + subjs together
   cat urls.txt | sed 's$https://$$' > urls_no_http.txt
   cat urls_no_http.txt | assetfinder | sort -u > assetfinder.txt
@@ -40,21 +39,16 @@ use_recontools_individualy() {
   echo -e "(DEBUG) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) file(s)"
 }
 
-recon() {
-  combine_assetfinder_gau_subjs()  # result in subjs.txt
-  use_recontools_individualy() # result in gau_solo_urls.txt subjs_url.txt hakrawler_urls.txt gospider_url.txt
-  cat gau_solo_urls.txt > all_urls.txt
-  cat subjs_url.txt >> all_urls.txt
-  cat hakrawler_urls.txt >> all_urls.txt
-  cat gospider_url.txt >> all_urls.txt
-  cat subjs.txt >> all_urls.txt
-
-  echo "(INFO) Removing dead link with httpx and Filtering duplicate from all sources"
-  cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u | grep -v '?v=' > urls_full.txt
-
+recon_js_url() {
+  combine_assetfinder_gau_subjs  # result in subjs.txt
+  use_recontools_individualy # result in gau_solo_urls.txt subjs_url.txt hakrawler_urls.txt gospider_url.txt
+  { cat gau_solo_urls.txt;cat gau_solo_urls.txt;cat subjs_url.txt;
+  cat hakrawler_urls.txt;cat gospider_url.txt;cat subjs.txt } >> all_urls.txt
+  echo "(INFO) Removing dead links with httpx & filtering duplicate url"
+  cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u | grep -v '?v=' > urls_alive.txt
+  cat urls_alive.txt | grep -v "jquery" > urls.txt  # filtering classic lib with no impact
   number_of_file_found=$(cat urls.txt | wc -l)
-  echo "(INFO) After filtering duplicate and offline js files, we  found: $((number_of_file_found)) files to analyse"
-  cat urls_full.txt | grep -v "jquery" > urls.txt  # filtering classic lib with no impact
+  echo "(INFO) After filtering duplicate/offline/boring js files, we found: $((number_of_file_found)) files to analyse"
   cat urls.txt
   if [ $number_of_file_found = "0" ]
   then
@@ -144,7 +138,7 @@ export PYTHONWARNINGS="ignore:Unverified HTTPS request"
 recon() {  # Try to gain the maximum of uniq JS file from the target
   echo -e "\e[36m[+] Started Gathering JsFiles-links with gau & subjs & hakrawler \e[0m"
   echo "Searching JSFiles on target(s):" && cat target.txt
-  gather_js
+  recon_js_url
   echo -e "\e[36m[+] Started gathering Endpoints\e[0m"
   endpoint_js
   echo -e "\e[36m[+] Started to Gather JSFiles locally for Manual Testing\e[0m"
