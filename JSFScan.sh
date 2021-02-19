@@ -16,31 +16,33 @@ my_gather_js() {
   cat target.txt | sed 's$https://$$' | assetfinder -subs-only | sort -u > assetfinder.txt
   echo -e "assetfinder found: $(cat assetfinder.txt | wc -l) file(s)"
   cat assetfinder.txt | gau | sort -u > gau.txt
-  echo -e "gau found: $(cat gau.txt | wc -l) file(s)"
+  echo -e "assetfinder + gau found: $(cat gau.txt | wc -l) file(s)"
   cat gau.txt | subjs | sort -u | grep -v '?v=' > subjs.txt
-  echo -e "gau found: $(cat subjs.txt | wc -l) file(s)"
+  echo -e "assetfinder + gau + subjs found: $(cat subjs.txt | wc -l) file(s)"
 }
 
 #Gather JSFilesUrls
 gather_js() {
   line=$(head -n 1 target.txt)
   # TOKNOW: assetfinder is not working good with "https://"
-  cat target.txt | sed 's$https://$$' | assetfinder -subs-only | sort -u | gau | sort -u | subjs | grep -v '?v=' | sort -u > gau_urls.txt
-  echo -e "\nassetfinder & Gau & subjs found:  $(cat gau_urls.txt | wc -l) file(s)"
   cat target.txt | gau | grep -iE "\.js$" | sort -u > gau_solo_urls.txt
-  echo -e "gau found: $(cat gau_solo_urls.txt | wc -l) file(s)"
+  echo -e "gau individually found: $(cat gau_solo_urls.txt | wc -l) file(s)"
   cat gau_solo_urls.txt | subjs > subjs_url.txt
-  echo -e "subjs found: $(cat subjs_url.txt | wc -l) file(s)"
+  echo -e "subjs individually found: $(cat subjs_url.txt | wc -l) file(s)"
   cat target.txt | sed 's$https://$$' | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | xargs -I% -P10 sh -c 'hakrawler -plain -linkfinder -depth 5 -url %' | awk '{print $3}' | grep -E "\.js(?:onp?)?$" | sort -u > assetfinder_urls.txt
-  echo -e "assetfinder found: $(cat assetfinder_urls.txt | wc -l) file(s)"
-  #TODO: check if target start with http, if not, add it
-  gospider -a -w -r -S target.txt -d 3 | grep -Eo "(http|https)://[^/\"].*\.js+" | sed "s#\] \- #\n#g" > gospider_url.txt
+  echo -e "assetfinder individually found: $(cat assetfinder_urls.txt | wc -l) file(s)"
+
   # TOKNOW: gospider is not working good without the "https://"
+  gospider -a -w -r -S target.txt -d 3 | grep -Eo "(http|https)://[^/\"].*\.js+" | sed "s#\] \- #\n#g" > gospider_url.txt
   echo -e "gospider found: $(cat gospider_url.txt | wc -l) file(s)"
   cat target.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
   echo -e "hakrawler found: $(cat hakrawler_urls.txt | wc -l) file(s)"
-  cat gau_urls.txt > all_urls.txt && cat subjs_url.txt >> all_urls.txt && cat hakrawler_urls.txt >> all_urls.txt #&& cat gospider_url.txt >> all_urls.txt
-  echo "Filtering duplicate and wih httpx removing dead link"
+  cat gau_urls.txt > all_urls.txt
+  cat subjs_url.txt >> all_urls.txt
+  cat hakrawler_urls.txt >> all_urls.txt
+  cat gospider_url.txt >> all_urls.txt
+  cat subjs.txt >> all_urls.txt
+  echo "Removing dead link with httpx and Filtering duplicate from all sources"
   cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u | grep -v '?v=' > urls.txt
   number_of_file_found=$(cat urls.txt | wc -l)
   echo "After filtering duplicate and offline js files, we  found: $((number_of_file_found)) files to analyse"
