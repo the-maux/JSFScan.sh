@@ -69,7 +69,7 @@ endpoint_js() {
   then
       echo "(WARNING) No endpoint found"
   fi
-  cat all_endpoints.txt | sort | uniq > endpoints.txt
+  cat all_endpoints.txt | sort -u > endpoints.txt
   echo "(INFO) Number of endpoint found: $(cat endpoints.txt | wc -l)"
   #cat endpoints.txt
 }
