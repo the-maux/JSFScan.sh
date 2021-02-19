@@ -13,11 +13,11 @@ echo -e "\e[36m \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_|\e[
 ############################################  RECON PART   #############################################################
 
 my_gather_js() {
-  cat target.txt | sed 's$https://$$' | assetfinder -subs-only | sort -u > assetfinder.txt
+  cat target.txt | sed 's$https://$$' | assetfinder | sort -u > assetfinder.txt
   echo -e "assetfinder found: $(cat assetfinder.txt | wc -l) file(s)"
-  cat assetfinder.txt | gau | sort -u > gau.txt
+  cat assetfinder.txt |  gau -subs -b png,jpg,jpeg,html,txt,JPG | sort -u > gau.txt
   echo -e "assetfinder + gau found: $(cat gau.txt | wc -l) file(s)"
-  cat gau.txt | subjs | sort -u | grep -v '?v=' > subjs.txt
+  cat gau.txt | subjs | grep -v '?v=' | sort -u > subjs.txt
   echo -e "assetfinder + gau + subjs found: $(cat subjs.txt | wc -l) file(s)"
 }
 
@@ -164,7 +164,7 @@ report() {
 }
 
 my_gather_js
-#recon
+recon
 #analyse
 #report
 echo "JSFScan is Closing"
