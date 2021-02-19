@@ -63,7 +63,7 @@ recon_js_url() {
 #Gather Endpoints From JsFiles
 endpoint_js() {
   # TOKNOW: linkfinder doesnt work if https is present
-  interlace -tL urls_no_http.txt -threads 5 -c "python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> all_endpoints.txt" --silent --no-bar
+  interlace -tL target.txt -threads 5 -c "python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> all_endpoints.txt" --silent --no-bar
   number_of_endpoint_found=$(cat all_endpoints.txt | wc -l)
   if [ $number_of_endpoint_found = "0" ]
   then
@@ -71,7 +71,6 @@ endpoint_js() {
   fi
   cat all_endpoints.txt | sort -u > endpoints.txt
   echo "(INFO) Number of endpoint found: $(cat endpoints.txt | wc -l)"
-  #cat endpoints.txt
 }
 
 #Collect Js Files For Maually Search
