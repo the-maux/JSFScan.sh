@@ -14,7 +14,7 @@ echo -e "\e[36m \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_|\e[
 ############################################  RECON PART   #############################################################
 
 combine_assetfinder_gau_subjs() {  # mixing assetfinder + gau + subjs together
-  cat urls.txt | sed 's$https://$$' > urls_no_http.txt
+  cat target.txt | sed 's$https://$$' > urls_no_http.txt
   cat urls_no_http.txt | assetfinder | sort -u > assetfinder.txt
   echo -e "(DEBUG) assetfinder found: $(cat assetfinder.txt | wc -l) file(s)"
   cat assetfinder.txt |  gau -subs -b png,jpg,jpeg,html,txt,JPG | sort -u > gau.txt
@@ -63,7 +63,7 @@ recon_js_url() {
 #Gather Endpoints From JsFiles
 endpoint_js() {
   # TOKNOW: linkfinder doesnt work if https is present
-  interlace -tL target.txt -threads 5 -c "python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> all_endpoints.txt" --silent --no-bar
+  interlace -tL urls_no_http.txt -threads 5 -c "python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> all_endpoints.txt" --silent --no-bar
   number_of_endpoint_found=$(cat all_endpoints.txt | wc -l)
   if [ $number_of_endpoint_found = "0" ]
   then
