@@ -6,8 +6,9 @@
 #
 #WORKDIR /root/tools
 #
-# install binary depedencies
-#RUN apt -y update && apt -y install git wget python3 python3-pip
+## install binary depedencies
+#RUN apt -y update && apt -y install git wget python3 python3-pip \
+# && apt-get clean
 #
 ## install python tools
 #RUN git clone https://github.com/codingo/Interlace.git
