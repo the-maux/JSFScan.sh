@@ -40,7 +40,6 @@ use_recontools_individualy() {
 }
 
 recon_js_url() {
-  combine_assetfinder_gau_subjs  # result in subjs.txt
   use_recontools_individualy # result in gau_solo_urls.txt subjs_url.txt hakrawler_urls.txt gospider_url.txt
   { cat gau_solo_urls.txt;cat gau_solo_urls.txt;cat subjs_url.txt;
   cat hakrawler_urls.txt;cat gospider_url.txt;cat subjs.txt } >> all_urls.txt
@@ -136,8 +135,10 @@ send_to_issue() {
 export PYTHONWARNINGS="ignore:Unverified HTTPS request"
 
 recon() {  # Try to gain the maximum of uniq JS file from the target
-  echo -e "\e[36m[+] Started Gathering JsFiles-links with gau & subjs & hakrawler \e[0m"
   echo "Searching JSFiles on target(s):" && cat target.txt
+  echo -e "\e[36m[+] Searching JsFiles-links mixing gau & subjs & assetfinder \e[0m"
+  combine_assetfinder_gau_subjs  # result in subjs.txt
+  echo -e "\e[36m[+] Searching JsFiles-links individualy gau & subjs & hakrawler & assetfind & gospider \e[0m"
   recon_js_url
   echo -e "\e[36m[+] Started gathering Endpoints\e[0m"
   endpoint_js
