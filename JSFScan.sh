@@ -2,6 +2,7 @@
 
 # Todo check if the output directory already exist, caused it failed if yes
 # Todo make a proctection when no .js file are found, to avoir the infinite loop in C.I
+# Todo detect if targets in target.txt have the https://, if not: add it
 
 echo -e "\e[36m _______ ______ _______ ______                          _     \e[0m"
 echo -e "\e[36m(_______/ _____(_______/ _____)                        | |    \e[0m"
@@ -12,52 +13,60 @@ echo -e "\e[36m \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_|\e[
 
 ############################################  RECON PART   #############################################################
 
-my_gather_js() {
-  cat target.txt | sed 's$https://$$' | assetfinder | sort -u > assetfinder.txt
-  echo -e "assetfinder found: $(cat assetfinder.txt | wc -l) file(s)"
+
+combine_assetfinder_gau_subjs() {  # mixing assetfinder + gau + subjs together
+  cat urls.txt | sed 's$https://$$' > urls_no_http.txt
+  cat urls_no_http.txt | assetfinder | sort -u > assetfinder.txt
+  echo -e "(DEBUG) assetfinder found: $(cat assetfinder.txt | wc -l) file(s)"
   cat assetfinder.txt |  gau -subs -b png,jpg,jpeg,html,txt,JPG | sort -u > gau.txt
-  echo -e "assetfinder + gau found: $(cat gau.txt | wc -l) file(s)"
+  echo -e "(DEBUG) assetfinder + gau found: $(cat gau.txt | wc -l) file(s)"
   cat gau.txt | subjs | grep -v '?v=' | sort -u > subjs.txt
-  echo -e "assetfinder + gau + subjs found: $(cat subjs.txt | wc -l) file(s)"
+  echo -e "(DEBUG) assetfinder + gau + subjs found: $(cat subjs.txt | wc -l) file(s)"
 }
 
-#Gather JSFilesUrls
-gather_js() {
-  line=$(head -n 1 target.txt)
+#Gather JSFilesUrls with gau / subjs / assetfinder / gospider / hakrawler
+use_recontools_individualy() {
   # TOKNOW: assetfinder is not working good with "https://"
   cat target.txt | gau | grep -iE "\.js$" | sort -u > gau_solo_urls.txt
-  echo -e "gau individually found: $(cat gau_solo_urls.txt | wc -l) file(s)"
+  echo -e "(DEBUG) gau individually found: $(cat gau_solo_urls.txt | wc -l) file(s)"
   cat gau_solo_urls.txt | subjs > subjs_url.txt
-  echo -e "subjs individually found: $(cat subjs_url.txt | wc -l) file(s)"
+  echo -e "(DEBUG) subjs individually found: $(cat subjs_url.txt | wc -l) file(s)"
   cat target.txt | sed 's$https://$$' | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | xargs -I% -P10 sh -c 'hakrawler -plain -linkfinder -depth 5 -url %' | awk '{print $3}' | grep -E "\.js(?:onp?)?$" | sort -u > assetfinder_urls.txt
-  echo -e "assetfinder individually found: $(cat assetfinder_urls.txt | wc -l) file(s)"
-
+  echo -e "(DEBUG) assetfinder individually found: $(cat assetfinder_urls.txt | wc -l) file(s)"
   # TOKNOW: gospider is not working good without the "https://"
   gospider -a -w -r -S target.txt -d 3 | grep -Eo "(http|https)://[^/\"].*\.js+" | sed "s#\] \- #\n#g" > gospider_url.txt
-  echo -e "gospider found: $(cat gospider_url.txt | wc -l) file(s)"
+  echo -e "(DEBUG) gospider individually found: $(cat gospider_url.txt | wc -l) file(s)"
   cat target.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
-  echo -e "hakrawler found: $(cat hakrawler_urls.txt | wc -l) file(s)"
-  cat gau_urls.txt > all_urls.txt
+  echo -e "(DEBUG) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) file(s)"
+}
+
+recon() {
+  combine_assetfinder_gau_subjs()  # result in subjs.txt
+  use_recontools_individualy() # result in gau_solo_urls.txt subjs_url.txt hakrawler_urls.txt gospider_url.txt
+  cat gau_solo_urls.txt > all_urls.txt
   cat subjs_url.txt >> all_urls.txt
   cat hakrawler_urls.txt >> all_urls.txt
   cat gospider_url.txt >> all_urls.txt
   cat subjs.txt >> all_urls.txt
-  echo "Removing dead link with httpx and Filtering duplicate from all sources"
-  cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u | grep -v '?v=' > urls.txt
+
+  echo "(INFO) Removing dead link with httpx and Filtering duplicate from all sources"
+  cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u | grep -v '?v=' > urls_full.txt
+
   number_of_file_found=$(cat urls.txt | wc -l)
-  echo "After filtering duplicate and offline js files, we  found: $((number_of_file_found)) files to analyse"
-  # TODO: filter classic .js like jquery, cause they are boring
+  echo "(INFO) After filtering duplicate and offline js files, we  found: $((number_of_file_found)) files to analyse"
+  cat urls_full.txt | grep -v "jquery" > urls.txt  # filtering classic lib with no impact
   cat urls.txt
   if [ $number_of_file_found = "0" ]
   then
-          echo "(WARNING) No JS file found during recon, Exiting..."
+          echo "(ERROR) No JS file found during recon, Exiting..."
           exit 1
   fi
 }
 
 #Gather Endpoints From JsFiles
 endpoint_js() {
-  interlace -tL urls.txt -threads 5 -c "python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> all_endpoints.txt" --silent --no-bar
+  # TOKNOW: linkfinder doesnt work if https is present
+  interlace -tL urls_no_http.txt -threads 5 -c "python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> all_endpoints.txt" --silent --no-bar
   number_of_endpoint_found=$(cat all_endpoints.txt | wc -l)
   if [ $number_of_endpoint_found = "0" ]
   then
@@ -163,7 +172,6 @@ report() {
   send_to_issue
 }
 
-my_gather_js
 recon
 #analyse
 #report
