@@ -14,16 +14,15 @@ echo -e "\e[36m \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_|\e[
 
 #Gather JSFilesUrls
 gather_js() {
-  line=$(head -n 1 filename)
-
+  line=$(head -n 1 target.txt)
   # TOKNOW: assetfinder is not working good with "https://"
-  cat target.txt | assetfinder | sort -u | gau | sort -u | subjs | grep -v '?v=' | sort -u > gau_urls.txt
+  cat target.txt | sed 's$https://$$' | assetfinder | sort -u | gau | sort -u | subjs | grep -v '?v=' | sort -u > gau_urls.txt
   echo -e "\nassetfinder & Gau & subjs found:  $(cat gau_urls.txt | wc -l) file(s)"
   cat target.txt | gau | grep -iE "\.js$" | sort -u > gau_solo_urls.txt
-  echo -e "subjs found: $(cat gau_solo_urls.txt | wc -l) file(s)"
+  echo -e "gau found: $(cat gau_solo_urls.txt | wc -l) file(s)"
   cat gau_solo_urls.txt | subjs > subjs_url.txt
   echo -e "subjs found: $(cat subjs_url.txt | wc -l) file(s)"
-  cat target.txt | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | xargs -I% -P10 sh -c 'hakrawler -plain -linkfinder -depth 5 -url %' | awk '{print $3}' | grep -E "\.js(?:onp?)?$" | sort -u > assetfinder_urls.txt
+  cat target.txt | sed 's$https://$$' | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | xargs -I% -P10 sh -c 'hakrawler -plain -linkfinder -depth 5 -url %' | awk '{print $3}' | grep -E "\.js(?:onp?)?$" | sort -u > assetfinder_urls.txt
   echo -e "assetfinder found: $(cat assetfinder_urls.txt | wc -l) file(s)"
   #TODO: check if target start with http, if not, add it
   gospider -a -w -r -S target.txt -d 3 | grep -Eo "(http|https)://[^/\"].*\.js+" | sed "s#\] \- #\n#g" > gospider_url.txt
