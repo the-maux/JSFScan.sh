@@ -27,7 +27,7 @@ gather_js() {
   echo -e "hakrawler found: $(cat hakrawler_urls.txt | wc -l) file(s)"
   cat gau_urls.txt > all_urls.txt && cat subjs_url.txt >> all_urls.txt && cat hakrawler_urls.txt >> all_urls.txt #&& cat gospider_url.txt >> all_urls.txt
   echo "Filtering duplicate and wih httpx removing dead link"
-  cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u > urls.txt
+  cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u | grep -v '?v=' > urls.txt
   number_of_file_found=$(cat urls.txt | wc -l)
   echo "After filtering duplicate and offline js files, we  found: $((number_of_file_found)) files to analyse"
   cat urls.txt
