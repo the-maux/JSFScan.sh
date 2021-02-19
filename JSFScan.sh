@@ -19,10 +19,10 @@ gather_js() {
   echo -e "\nGau found:  $(cat gau_urls.txt | wc -l) file(s)"
   cat gau_urls.txt | subjs > subjs_url.txt
   echo -e "subjs found: $(cat subjs_url.txt | wc -l) file(s)"
-  assetfinder -subs-only $DOMAIN -silent | httpx -timeout 3 -threads 300 --follow-redirects -silent | xargs -I% -P10 sh -c 'hakrawler -plain -linkfinder -depth 5 -url %' | awk '{print $3}' | grep -E "\.js(?:onp?)?$" | anew > assetfinder_urls.txt
+  cat target.txt | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | xargs -I% -P10 sh -c 'hakrawler -plain -linkfinder -depth 5 -url %' | awk '{print $3}' | grep -E "\.js(?:onp?)?$" | sort -u > assetfinder_urls.txt
   echo -e "assetfinder found: $(cat assetfinder_urls.txt | wc -l) file(s)"
-  # gospider -a -w -r -S target.txt -d 3 | grep -Eo "(http|https)://[^/\"].*\.js+" | sed "s#\] \- #\n#g" > gospider_url.txt
-  #echo -e "gospider found: $(cat gospider_url.txt | wc -l) file(s)"
+  gospider -a -w -r -S target.txt -d 3 | grep -Eo "(http|https)://[^/\"].*\.js+" | sed "s#\] \- #\n#g" > gospider_url.txt
+  echo -e "gospider found: $(cat gospider_url.txt | wc -l) file(s)"
   cat target.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
   echo -e "hakrawler found: $(cat hakrawler_urls.txt | wc -l) file(s)"
   cat gau_urls.txt > all_urls.txt && cat subjs_url.txt >> all_urls.txt && cat hakrawler_urls.txt >> all_urls.txt #&& cat gospider_url.txt >> all_urls.txt
