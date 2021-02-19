@@ -12,11 +12,20 @@ echo -e "\e[36m \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_|\e[
 
 ############################################  RECON PART   #############################################################
 
+my_gather_js() {
+  cat target.txt | sed 's$https://$$' | assetfinder -subs-only | sort -u > assetfinder.txt
+  echo -e "assetfinder found: $(cat assetfinder.txt | wc -l) file(s)"
+  cat assetfinder.txt | gau | sort -u > gau.txt
+  echo -e "gau found: $(cat gau.txt | wc -l) file(s)"
+  cat gau.txt | subjs | sort -u | grep -v '?v=' > subjs.txt
+  echo -e "gau found: $(cat subjs.txt | wc -l) file(s)"
+}
+
 #Gather JSFilesUrls
 gather_js() {
   line=$(head -n 1 target.txt)
   # TOKNOW: assetfinder is not working good with "https://"
-  cat target.txt | sed 's$https://$$' | assetfinder | sort -u | gau | sort -u | subjs | grep -v '?v=' | sort -u > gau_urls.txt
+  cat target.txt | sed 's$https://$$' | assetfinder -subs-only | sort -u | gau | sort -u | subjs | grep -v '?v=' | sort -u > gau_urls.txt
   echo -e "\nassetfinder & Gau & subjs found:  $(cat gau_urls.txt | wc -l) file(s)"
   cat target.txt | gau | grep -iE "\.js$" | sort -u > gau_solo_urls.txt
   echo -e "gau found: $(cat gau_solo_urls.txt | wc -l) file(s)"
@@ -152,7 +161,8 @@ report() {
   send_to_issue
 }
 
-recon
+my_gather_js
+#recon
 #analyse
 #report
 echo "JSFScan is Closing"
