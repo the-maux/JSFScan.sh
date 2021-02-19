@@ -50,8 +50,8 @@ recon_js_url() {
   cat urls.txt
   if [ $number_of_file_found = "0" ]
   then
-          echo "(ERROR) No JS file found during recon, Exiting..."
-          exit 1
+      echo "(ERROR) No JS file found during recon, Exiting..."
+      exit 1
   fi
 }
 
