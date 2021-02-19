@@ -67,7 +67,7 @@ endpoint_js() {
       echo "(WARNING) No endpoint found"
   fi
   cat all_endpoints.txt | sort | uniq > endpoints.txt
-  echo "Number of endpoint found: $(cat endpoints.txt | wc -l)"
+  echo "(INFO) Number of endpoint found: $(cat endpoints.txt | wc -l)"
   #cat endpoints.txt
 }
 
@@ -75,14 +75,14 @@ endpoint_js() {
 getjsbeautify() {
   mkdir -p /root/jsfiles
   python3 ./tools/jsbeautify.py
-  echo "Getjsbeautify downloaded: $(ls -l /root/jsfiles/ | wc -l) files"
+  echo "(INFO) Getjsbeautify downloaded: $(ls -l /root/jsfiles/ | wc -l) files"
 }
 
 #Gather JSFilesWordlist
 wordlist_js() {
   cat urls.txt | python3 ./tools/getjswords.py >> temp_jswordlist.txt
   cat temp_jswordlist.txt | sort -u >> jswordlist.txt
-  echo "getjswords found $(cat jswordlist.txt | wc -l) JSWord(s)"
+  echo "(INFO) getjswords found $(cat jswordlist.txt | wc -l) JSWord(s)"
   rm temp_jswordlist.txt
 }
 
@@ -90,7 +90,7 @@ wordlist_js() {
 #Gather Variables from JSFiles For Xss
 var_js() {
   cat urls.txt | while read url; do bash ./tools/jsvar.sh $url | tee -a js_var.txt; done
-  echo "Search var for xss found $(cat js_var.txt | wc -l) JSWord(s)"
+  echo "(INFO) Var with possible xss :$(cat js_var.txt | wc -l)"
 }
 
 #Find DomXSS
@@ -101,7 +101,7 @@ domxss_js() {
 #Gather Secrets From Js Files
 secret_js() {
   interlace -tL urls.txt -threads 5 -c "python3 ./tools/SecretFinder/SecretFinder.py -i _target_ -o cli >> jslinksecret.txt" --silent --no-bar
-  echo -n "Number of secrets found: " && cat jslinksecret.txt | wc -l
+  echo -n "(INFO) Number of secrets found: " && cat jslinksecret.txt | wc -l
 }
 
 ############################################  REPORT SECTION ###########################################################
@@ -169,4 +169,4 @@ report() {
 recon
 #analyse
 #report
-echo "JSFScan is Closing"
+echo "(INFO) JSFScan is Closing"
