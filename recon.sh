@@ -19,10 +19,10 @@ use_recontools_individualy() {
   cat target.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
   echo -e "(DEBUG) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
 
-  chaos -d att.com | httpx -silent | xargs -I@ -P20 sh -c 'gospider -a -s "@" -d 2' | grep -Eo "(http|https)://[^/"].*.js+" | sed "s#] > chaos.txt #TODO add in all urls.txt
+  cat target.txt | chaos -silent | httpx -silent | xargs -I@ -P20 sh -c 'gospider -a -s "@" -d 2' | grep -Eo "(http|https)://[^/"].*.js+" | sed "s#] > chaos.txt #TODO add in all urls.txt
   echo -e "(DEBUG) chaos + wayback found: $(cat chaos.txt | wc -l) url(s)"
 
-  cat target.txt | rush -j 100 'hakrawler -js -plain -usewayback -depth 6 -scope subs -url {} | unew hakrawlerHttpx.txt' #TODO add in all urls.txt
+  cat target.txt | rush -j 100 'hakrawler -js -plain -usewayback -depth 6 -scope subs -url {} | unew > hakrawlerHttpx.txt'
   echo -e "(DEBUG) hakrawler + wayback found: $(cat hakrawlerHttpx.txt | wc -l) url(s)"
 
   cat target.txt | httpx --silent | jsubfinder -s > jsubfinder.txt #TODO add in all urls.txt
@@ -56,13 +56,14 @@ endpoint_js() {
 }
 
 regroup_found_and_filter() {
-  cat gau_solo_urls.txt > all_urls.txt;
-  cat subjs_url.txt >> all_urls.txt;
-  cat hakrawler_urls.txt >> all_urls.txt;
-  cat gospider_url.txt >> all_urls.txt;
+  cat gau_solo_urls.txt > all_urls.txt
+  cat subjs_url.txt >> all_urls.txt
+  cat hakrawler_urls.txt >> all_urls.txt
+  cat gospider_url.txt >> all_urls.txt
   cat subjs.txt >> all_urls.txt
   cat jsubfinder.txt >> all_urls.txt
-  cat hakrawlerHttpx.txt >> all_urls.txt;
+  cat hakrawlerHttpx.txt >> all_urls.txt
+  cat chaos.txt >>  all_urls.txt
 
   echo "(INFO) Removing dead links with httpx & filtering duplicate url"
   cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u | grep -v '?v=' > urls_alive.txt
