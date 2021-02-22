@@ -43,4 +43,4 @@ FROM themaux/jsfscan:latest
 
 COPY . /root
 
-CMD ["/bin/bash", "./JSFScan.sh"]
+CMD ["/bin/bash", "./recon.sh"]

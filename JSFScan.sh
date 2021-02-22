@@ -15,12 +15,15 @@ echo -e "\e[36m \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_|\e[
 
 combine_assetfinder_gau_subjs() {  # mixing assetfinder + gau + subjs together
   cat target.txt | sed 's$https://$$' > urls_no_http.txt
+
   cat urls_no_http.txt | assetfinder | sort -u > assetfinder.txt
-  echo -e "(DEBUG) assetfinder found: $(cat assetfinder.txt | wc -l) url(s)"
-  cat assetfinder.txt |  gau -subs -b png,jpg,jpeg,html,txt,JPG | sort -u > gau.txt
+  echo -e "(DEBUG) assetfinder found: $(cat assetfinder.txt | wc -l) subdomain (s)"
+
+  cat assetfinder.txt | gau -subs -b png,jpg,jpeg,html,txt,JPG | sort -u > gau.txt
   echo -e "(DEBUG) assetfinder + gau found: $(cat gau.txt | wc -l) url(s)"
+
   cat gau.txt | subjs | grep -v '?v=' | sort -u > subjs.txt
-  echo -e "(DEBUG) assetfinder + gau + subjs found: $(cat subjs.txt | wc -l) file(s)"
+  echo -e "(DEBUG) assetfinder + gau + subjs found: $(cat subjs.txt | wc -l) javascript file(s)"
 }
 
 #Gather JSFilesUrls with gau / subjs / assetfinder / gospider / hakrawler
@@ -28,13 +31,17 @@ use_recontools_individualy() {
   # TOKNOW: assetfinder is not working good with "https://"
   cat target.txt | gau | grep -iE "\.js$" | sort -u > gau_solo_urls.txt
   echo -e "(DEBUG) gau individually found: $(cat gau_solo_urls.txt | wc -l) url(s)"
+
   cat gau_solo_urls.txt | subjs > subjs_url.txt
-  echo -e "(DEBUG) subjs individually found: $(cat subjs_url.txt | wc -l) url(s)"
+  echo -e "(DEBUG) gau + subjs found: $(cat subjs_url.txt | wc -l) url(s)"
+
   cat target.txt | sed 's$https://$$' | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | xargs -I% -P10 sh -c 'hakrawler -plain -linkfinder -depth 5 -url %' | awk '{print $3}' | grep -E "\.js(?:onp?)?$" | sort -u > assetfinder_urls.txt
   echo -e "(DEBUG) assetfinder individually found: $(cat assetfinder_urls.txt | wc -l) url(s)"
+
   # TOKNOW: gospider is not working good without the "https://"
   gospider -a -w -r -S target.txt -d 3 | grep -Eo "(http|https)://[^/\"].*\.js+" | sed "s#\] \- #\n#g" > gospider_url.txt
   echo -e "(DEBUG) gospider individually found: $(cat gospider_url.txt | wc -l) url(s)"
+
   cat target.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
   echo -e "(DEBUG) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
 }
@@ -47,17 +54,20 @@ recon_js_url() {
   cat hakrawler_urls.txt >> all_urls.txt;
   cat gospider_url.txt >> all_urls.txt;
   cat subjs.txt >> all_urls.txt
+
   echo "(INFO) Removing dead links with httpx & filtering duplicate url"
   cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u | grep -v '?v=' > urls_alive.txt
+
   cat urls_alive.txt | grep -v "jquery" > urls.txt  # filtering classic lib with no impact
   number_of_file_found=$(cat urls.txt | wc -l)
   echo "(INFO) After filtering duplicate/offline/boring js files, we found: $((number_of_file_found)) files to analyse"
-  cat urls.txt
+
   if [ $number_of_file_found = "0" ]
   then
       echo "(ERROR) No JS file found during recon, Exiting..."
       exit 1
   fi
+  cat urls.txt
 }
 
 #Gather Endpoints From JsFiles
@@ -74,10 +84,10 @@ endpoint_js() {
 }
 
 #Collect Js Files For Maually Search
-getjsbeautify() {
+DownloadJSFile() {
   mkdir -p /root/jsfiles
   python3 ./tools/jsbeautify.py
-  echo "(INFO) Getjsbeautify downloaded: $(ls -l /root/jsfiles/ | wc -l) files"
+  echo "(INFO) DownloadJSFile downloaded: $(ls -l /root/jsfiles/ | wc -l) files"
 }
 
 #Gather JSFilesWordlist
@@ -139,14 +149,14 @@ export PYTHONWARNINGS="ignore:Unverified HTTPS request"
 
 recon() {  # Try to gain the maximum of uniq JS file from the target
   echo "Searching JSFiles on target(s):" && cat target.txt
+  echo -e "\n\e[36m[+] Searching JsFiles-links individualy gau & subjs & hakrawler & assetfind & gospider \e[0m"
+  recon_js_url
   echo -e "\e[36m[+] Searching JsFiles-links mixing gau & subjs & assetfinder \e[0m"
   combine_assetfinder_gau_subjs  # result in subjs.txt
-  echo -e "\e[36m[+] Searching JsFiles-links individualy gau & subjs & hakrawler & assetfind & gospider \e[0m"
-  recon_js_url
   echo -e "\e[36m[+] Started gathering Endpoints\e[0m"
   endpoint_js
   echo -e "\e[36m[+] Started to Gather JSFiles locally for Manual Testing\e[0m"
-  getjsbeautify
+  DownloadJSFile
 }
 
 
