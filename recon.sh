@@ -1,46 +1,45 @@
 #!/usr/bin/env bash
 
-#Gather JSFilesUrls with gau / subjs / assetfinder / gospider / hakrawler
+#Gather JSFilesUrls with gau / subjs / hakrawler / gospider / jsubfinder / assetfinder / chaos / wayback
 use_recontools_individualy() {
   # TOKNOW: assetfinder is not working good with "https://"
   cat target.txt | gau | grep -iE "\.js$" | sort -u > gau_solo_urls.txt
-  echo -e "(DEBUG) gau individually found: $(cat gau_solo_urls.txt | wc -l) url(s)"
+  echo -e "(INFO) gau individually found: $(cat gau_solo_urls.txt | wc -l) url(s)"
 
   cat gau_solo_urls.txt | subjs > subjs_url.txt
-  echo -e "(DEBUG) gau + subjs found: $(cat subjs_url.txt | wc -l) url(s)"
+  echo -e "(INFO) gau + subjs found: $(cat subjs_url.txt | wc -l) url(s)"
 
   cat target.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
-  echo -e "(DEBUG) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
+  echo -e "(INFO) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
 
   # TOKNOW: gospider is not working good without the "https://"
   gospider -a -w -r -S target.txt -d 3 | grep -Eo "(http|https)://[^/\"].*\.js+" | sed "s#\] \- #\n#g" > gospider_url.txt
-  echo -e "(DEBUG) gospider individually found: $(cat gospider_url.txt | wc -l) url(s)"
+  echo -e "(INFO) gospider individually found: $(cat gospider_url.txt | wc -l) url(s)"
 
   cat target.txt | httpx --silent | jsubfinder -s > jsubfinder.txt #TODO add in all urls.txt
-  echo -e "(DEBUG) jsubfinder individually found: $(cat jsubfinder.txt | wc -l) url(s)"
+  echo -e "(INFO) jsubfinder individually found: $(cat jsubfinder.txt | wc -l) url(s)"
 
   cat target.txt | sed 's$https://$$' | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | xargs -I% -P10 sh -c 'hakrawler -plain -linkfinder -depth 5 -url %' | awk '{print $3}' | grep -E "\.js(?:onp?)?$" | sort -u > assetfinder_urls.txt
-  echo -e "(DEBUG) assetfinder individually found: $(cat assetfinder_urls.txt | wc -l) url(s)"
+  echo -e "(INFO) assetfinder individually found: $(cat assetfinder_urls.txt | wc -l) url(s)"
 
   cat target.txt | chaos -silent | httpx -silent | xargs -I@ -P20 sh -c 'gospider -a -s "@" -d 2' | grep -Eo "(http|https)://[^/"].*.js+" | sed "s#] > chaos.txt #TODO add in all urls.txt
-  echo -e "(DEBUG) chaos + wayback found: $(cat chaos.txt | wc -l) url(s)"
+  echo -e "(INFO) chaos + wayback found: $(cat chaos.txt | wc -l) url(s)"
 
   cat target.txt | rush -j 100 'hakrawler -js -plain -usewayback -depth 6 -scope subs -url {} | unew > hakrawlerHttpx.txt'
-  echo -e "(DEBUG) hakrawler + wayback found: $(cat hakrawlerHttpx.txt | wc -l) url(s)"
-
+  echo -e "(INFO) hakrawler + wayback found: $(cat hakrawlerHttpx.txt | wc -l) url(s)"
 }
 
 combine_assetfinder_gau_subjs() {  # mixing assetfinder + gau + subjs together
   cat target.txt | sed 's$https://$$' > urls_no_http.txt  # remove https cause assetfinder doesnt like it
 
   cat urls_no_http.txt | assetfinder | sort -u > assetfinder.txt
-  echo -e "(DEBUG) assetfinder found: $(cat assetfinder.txt | wc -l) subdomain (s)"
+  echo -e "(INFO) assetfinder found: $(cat assetfinder.txt | wc -l) subdomain (s)"
 
   cat assetfinder.txt | gau -subs -b png,jpg,jpeg,html,txt,JPG | sort -u > gau.txt
-  echo -e "(DEBUG) assetfinder + gau found: $(cat gau.txt | wc -l) url(s)"
+  echo -e "(INFO) assetfinder + gau found: $(cat gau.txt | wc -l) url(s)"
 
   cat gau.txt | subjs | grep -v '?v=' | sort -u > subj_gau_assetfinder.txt
-  echo -e "(DEBUG) assetfinder + gau + subjs found: $(cat subjs.txt | wc -l) javascript file(s)"
+  echo -e "(INFO) assetfinder + gau + subjs found: $(cat subjs.txt | wc -l) javascript file(s)"
 }
 
 #Gather Endpoints From JsFiles
