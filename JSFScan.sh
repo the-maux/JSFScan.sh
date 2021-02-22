@@ -169,6 +169,8 @@ analyse() {
   domxss_js
   echo -e "\e[36m[+]  Started Finding Secrets in JSFiles\e[0m"
   secret_js
+  #Extract path to js
+  #cat file.js | grep -aoP "(?<=(\"|\'|\`))\/[a-zA-Z0-9_?&=\/\-\#\.]*(?=(\"|\'|\`))" | sort -u
 }
 
 report() {

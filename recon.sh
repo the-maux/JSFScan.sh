@@ -18,6 +18,15 @@ use_recontools_individualy() {
 
   cat target.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
   echo -e "(DEBUG) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
+
+  chaos -d att.com | httpx -silent | xargs -I@ -P20 sh -c 'gospider -a -s "@" -d 2' | grep -Eo "(http|https)://[^/"].*.js+" | sed "s#] > chaos.txt #TODO add in all urls.txt
+  echo -e "(DEBUG) chaos + wayback found: $(cat chaos.txt | wc -l) url(s)"
+
+  cat target.txt | rush -j 100 'hakrawler -js -plain -usewayback -depth 6 -scope subs -url {} | unew hakrawlerHttpx' #TODO add in all urls.txt
+  echo -e "(DEBUG) hakrawler + wayback found: $(cat hakrawler_urls.txt | wc -l) url(s)"
+
+  cat target.txt | httpx --silent | jsubfinder -s > jsubfinder.txt #TODO add in all urls.txt
+  echo -e "(DEBUG) jsubfinder individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
 }
 
 combine_assetfinder_gau_subjs() {  # mixing assetfinder + gau + subjs together
