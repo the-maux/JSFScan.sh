@@ -42,7 +42,7 @@
 #ENV PATH $PATH:$GOPATH
 #ENV OUTPUT_DIR=/root/reportDirectory
 
-TOKNOW: Config is herited from image themaux/jsfscan on docker.io (i was tired to always wait the full build)
+# TOKNOW: Config is herited from image themaux/jsfscan on docker.io (i was tired to always wait the full build)
 FROM themaux/jsfscan:latest
 
 COPY . /root
