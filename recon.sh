@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+
+export CHAOS_KEY=$CHAOS_TOKEN
+
 #Gather JSFilesUrls with gau / subjs / hakrawler / gospider / jsubfinder / assetfinder / chaos / wayback
 use_recontools_individualy() {
   # TOKNOW: assetfinder is not working good with "https://"
