@@ -46,10 +46,10 @@ combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetf
   cat SubDomainizer.txt | sed 's$www.$$' | sort -u > urls_no_http.txt
   echo -e "(INFO) After filtering duplicate, $(cat urls_no_http.txt | wc -l) subdomain(s) found"
 
-  cat urls_no_http.txt | assetfinder | sort -u > assetfinder.txt
+  cat urls_no_http.txt | assetfinder | grep $target | sort -u > assetfinder.txt
   echo -e "(INFO) assetfinder found $(cat assetfinder.txt | wc -l) link(s) from sublist3r\subfinder\SubDomainizer"
 
-  cat target.txt | gau -subs -b png,jpg,jpeg,html,txt,JPG,eot,css,ttf,svg,woff,pdf,xml,PNG,woff2,ico,webp,php,gif | unew > gau.txt
+  cat assetfinder.txt | gau -subs -b png,jpg,jpeg,html,txt,JPG,eot,css,ttf,svg,woff,pdf,xml,PNG,woff2,ico,webp,php,gif | unew > gau.txt
   echo -e "(INFO) gau found: $(cat gau.txt | wc -l) url(s) from assetfinder"
 
   cat gau.txt | subjs | sort -u > subj_gau_assetfinder.txt
