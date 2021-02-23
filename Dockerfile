@@ -14,10 +14,13 @@
 #RUN git clone https://github.com/codingo/Interlace.git
 #RUN git clone https://github.com/dark-warlord14/LinkFinder
 #RUN git clone https://github.com/m4ll0k/SecretFinder.git
+#RUN git clone https://github.com/nsonaniya2010/SubDomainizer.git
 #
 #RUN cat ./Interlace/requirements.txt > requirements.txt
 #RUN cat ./SecretFinder/requirements.txt >> requirements.txt
 #RUN cat ./LinkFinder/requirements.txt >> requirements.txt
+#RUN cat ./SubDomainizer/requirements.txt | grep -v "requests" >> requirements.txt
+#RUN echo "colorama" >> requirements.txt
 #RUN pip3 install -r requirements.txt
 #RUN cd Interlace && python3 ./setup.py install
 #RUN cd LinkFinder && python3 ./setup.py install

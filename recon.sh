@@ -19,7 +19,6 @@ use_recontools_individualy() {
   gospider -a -w -r -S target.txt -d 3 | grep -Eo "(http|https)://[^/\"].*\.js+" | sed "s#\] \- #\n#g" > gospider_url.txt
   echo -e "(INFO) gospider individually found: $(cat gospider_url.txt | wc -l) url(s)"
 
-
   cat target.txt | sed 's$https://$$' | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | xargs -I% -P10 sh -c 'hakrawler -plain -linkfinder -depth 5 -url %' | awk '{print $3}' | grep -E "\.js(?:onp?)?$" | sort -u > assetfinder_urls.txt
   echo -e "(INFO) assetfinder individually found: $(cat assetfinder_urls.txt | wc -l) url(s)"
 
@@ -30,17 +29,18 @@ use_recontools_individualy() {
   echo -e "(INFO) hakrawler + wayback found: $(cat hakrawlerHttpx.txt | wc -l) url(s)"
 }
 
-combine_assetfinder_gau_subjs() {  # mixing assetfinder + gau + subjs together
-  cat target.txt | sed 's$https://$$' > urls_no_http.txt  # remove https cause assetfinder doesnt like it
+combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetfinder + gau + subjs together
+  python3 ./SubDomainizer/SubDomainizer.py -l target.txt -o urls_no_http.txt -san all -b
+  echo -e "(DEBUG) SubDomainizer found: $(cat urls_no_http.txt | wc -l) subdomain (s)"
 
   cat urls_no_http.txt | assetfinder | sort -u > assetfinder.txt
-  echo -e "(INFO) assetfinder found: $(cat assetfinder.txt | wc -l) subdomain (s)"
+  echo -e "(DEBUG) SubDomainizer + assetfinder found: $(cat assetfinder.txt | wc -l) subdomain (s)"
 
   cat assetfinder.txt | gau -subs -b png,jpg,jpeg,html,txt,JPG | sort -u > gau.txt
-  echo -e "(INFO) assetfinder + gau found: $(cat gau.txt | wc -l) url(s)"
+  echo -e "(DEBUG) SubDomainizer + assetfinder + gau found: $(cat gau.txt | wc -l) url(s)"
 
-  cat gau.txt | subjs | grep -v '?v=' | sort -u > subj_gau_assetfinder.txt
-  echo -e "(INFO) assetfinder + gau + subjs found: $(cat subjs.txt | wc -l) javascript file(s)"
+  cat gau.txt | subjs | grep -v '?v=' | sort -u > subjs.txt
+  echo -e "(DEBUG) SubDomainizer + assetfinder + gau + subjs found: $(cat subjs.txt | wc -l) javascript file(s)"
 }
 
 #Gather Endpoints From JsFiles
@@ -86,10 +86,10 @@ regroup_found_and_filter() {
 
 recon() {  # Try to gain the maximum of uniq JS file from the target
   echo "Searching JSFiles on target(s):" && cat target.txt
-  echo -e "\n\e[36m[+] Searching JsFiles-links individualy gau & subjs & hakrawler & assetfind & gospider \e[0m"
-  use_recontools_individualy # result in gau_solo_urls.txt subjs_url.txt hakrawler_urls.txt gospider_url.txt
-#  echo -e "\e[36m[+] Searching JsFiles-links mixing gau & subjs & assetfinder \e[0m"
-#  combine_assetfinder_gau_subjs  # result in subjs.txt
+  #echo -e "\n\e[36m[+] Searching JsFiles-links individualy gau & subjs & hakrawler & assetfind & gospider \e[0m"
+  #use_recontools_individualy # result in gau_solo_urls.txt subjs_url.txt hakrawler_urls.txt gospider_url.txt
+  echo -e "\e[36m[+] Searching JsFiles-links mixing gau & subjs & assetfinder \e[0m"
+  combine_subdomainizer_assetfinder_gau_subjs  # result in subjs.txt
 #  echo -e "\e[36m[+] Started gathering Endpoints\e[0m"
 #  endpoint_js
   regroup_found_and_filter

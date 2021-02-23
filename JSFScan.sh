@@ -13,17 +13,18 @@ echo -e "\e[36m \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_|\e[
 
 ############################################  RECON PART   #############################################################
 
-combine_assetfinder_gau_subjs() {  # mixing assetfinder + gau + subjs together
-  cat target.txt | sed 's$https://$$' > urls_no_http.txt
+combine_subDomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetfinder + gau + subjs together
+  python3 ./SubDomainizer/SubDomainizer.py -l target.txt -o urls_no_http.txt -san all
+  echo -e "(DEBUG) SubDomainizer found: $(cat urls_no_http.txt | wc -l) subdomain (s)"
 
   cat urls_no_http.txt | assetfinder | sort -u > assetfinder.txt
-  echo -e "(DEBUG) assetfinder found: $(cat assetfinder.txt | wc -l) subdomain (s)"
+  echo -e "(DEBUG) SubDomainizer + assetfinder found: $(cat assetfinder.txt | wc -l) subdomain (s)"
 
   cat assetfinder.txt | gau -subs -b png,jpg,jpeg,html,txt,JPG | sort -u > gau.txt
-  echo -e "(DEBUG) assetfinder + gau found: $(cat gau.txt | wc -l) url(s)"
+  echo -e "(DEBUG) SubDomainizer + assetfinder + gau found: $(cat gau.txt | wc -l) url(s)"
 
   cat gau.txt | subjs | grep -v '?v=' | sort -u > subjs.txt
-  echo -e "(DEBUG) assetfinder + gau + subjs found: $(cat subjs.txt | wc -l) javascript file(s)"
+  echo -e "(DEBUG) SubDomainizer + assetfinder + gau + subjs found: $(cat subjs.txt | wc -l) javascript file(s)"
 }
 
 #Gather JSFilesUrls with gau / subjs / assetfinder / gospider / hakrawler
@@ -152,7 +153,7 @@ recon() {  # Try to gain the maximum of uniq JS file from the target
   echo -e "\n\e[36m[+] Searching JsFiles-links individualy gau & subjs & hakrawler & assetfind & gospider \e[0m"
   recon_js_url
   echo -e "\e[36m[+] Searching JsFiles-links mixing gau & subjs & assetfinder \e[0m"
-  combine_assetfinder_gau_subjs  # result in subjs.txt
+  combine_subDomainizer_assetfinder_gau_subjs  # result in subjs.txt
   echo -e "\e[36m[+] Started gathering Endpoints\e[0m"
   endpoint_js
   echo -e "\e[36m[+] Started to Gather JSFiles locally for Manual Testing\e[0m"
