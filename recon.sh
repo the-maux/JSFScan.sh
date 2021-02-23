@@ -44,13 +44,13 @@ combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetf
   cat sublist3r.txt >> SubDomainizer.txt
   cat subfinder.txt >> SubDomainizer.txt
   cat SubDomainizer.txt | sort -u > urls_no_http.txt
-  echo -e "(INFO) subdomain recound after filtering, found: $(cat SubDomainizer.txt | wc -l) subdomain (s)"
+  echo -e "(INFO) After filtering duplicate, $(cat SubDomainizer.txt | wc -l) subdomain(s) found"
 
   cat urls_no_http.txt | assetfinder | sort -u > assetfinder.txt
-  echo -e "(INFO) sublist3r + SubDomainizer + assetfinder found: $(cat assetfinder.txt | wc -l) subdomain(s)"
+  echo -e "(INFO) assetfinder found: $(cat assetfinder.txt | wc -l) subdomain(s)"
 
   cat assetfinder.txt | gau -subs -b png,jpg,jpeg,html,txt,JPG | sort -u > gau.txt
-  echo -e "(INFO) gau found: $(cat gau.txt | wc -l) url(s) from this subdomains"
+  echo -e "(INFO) gau found: $(cat gau.txt | wc -l) url(s) from this url(s)"
 
   cat gau.txt | subjs | sort -u > subjs.txt
   echo -e "(INFO) subjs found: $(cat subjs.txt | wc -l) javascript file(s) from this urls"
@@ -70,20 +70,22 @@ endpoint_js() {
 }
 
 regroup_found_and_filter() {
-  cat gau_solo_urls.txt > all_urls.txt
+#  cat gau_solo_urls.txt > all_urls.txt
   cat subjs_url.txt >> all_urls.txt
-  cat hakrawler_urls.txt >> all_urls.txt
-  cat gospider_url.txt >> all_urls.txt
-  cat jsubfinder.txt >> all_urls.txt
-  cat assetfinder_urls.txt >> all_urls.txt
-  cat chaos.txt >>  all_urls.txt
-  cat hakrawlerHttpx.txt >> all_urls.txt
-  cat subj_gau_assetfinder.txt >> all_urls.txt
+#  cat hakrawler_urls.txt >> all_urls.txt
+#  cat gospider_url.txt >> all_urls.txt
+#  cat jsubfinder.txt >> all_urls.txt
+#  cat assetfinder_urls.txt >> all_urls.txt
+#  cat chaos.txt >>  all_urls.txt
+#  cat hakrawlerHttpx.txt >> all_urls.txt
+#  cat subj_gau_assetfinder.txt >> all_urls.txt
 
   echo "(INFO) Removing dead links with httpx & filtering duplicate url"
   # filtering dead link
   cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 > urls_alive.txt
   # filtering duplicate & libs with no impact
+  number_of_file_found=$(cat urls_alive.txt | wc -l)
+  echo "(INFO) Before filter, we found: $((number_of_file_found)) files to analyse"
   cat urls_alive.txt | awk -F '?' '{ print $1 }' | grep -v "jquery" | sort -u > urls.txt
   number_of_file_found=$(cat urls.txt | wc -l)
   echo "(INFO) After filtering duplicate/offline/boring js files, we found: $((number_of_file_found)) files to analyse"
