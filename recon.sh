@@ -30,10 +30,10 @@ use_recontools_individualy() {
 }
 
 combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetfinder + gau + subjs together
-  target=$(head -n 1 target.txt)
+  target=$(head -n 1 target.txt | sed 's$https://$$')
 
-  python3 ./tools/Sublist3r/sublist3r.py -d $target -b -o sublist3r.txt
   echo $target
+  python3 ./tools/Sublist3r/sublist3r.py -d $target -b -o sublist3r.txt
   echo -e "(DEBUG) sublist3r found: $(cat urls_no_http.txt | wc -l) subdomain (s)"
 
   python3 ./SubDomainizer/SubDomainizer.py -l target.txt -o SubDomainizer.txt -san all -b
