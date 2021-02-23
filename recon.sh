@@ -43,8 +43,8 @@ combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetf
 
   cat sublist3r.txt >> SubDomainizer.txt
   cat subfinder.txt >> SubDomainizer.txt
-  cat SubDomainizer.txt | sort -u > urls_no_http.txt
-  echo -e "(INFO) After filtering duplicate, $(cat SubDomainizer.txt | wc -l) subdomain(s) found"
+  cat SubDomainizer.txt | sed 's$www.$$' |sort -u > urls_no_http.txt
+  echo -e "(INFO) After filtering duplicate, $(cat urls_no_http.txt | wc -l) subdomain(s) found"
   cat urls_no_http.txt
   echo "---------------------------------------------------------------------------------------------"
 
