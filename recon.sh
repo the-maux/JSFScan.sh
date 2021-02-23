@@ -33,26 +33,26 @@ combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetf
   target=$(head -n 1 target.txt | sed 's$https://$$')
 
   subfinder -dL target.txt -silent > subfinder.txt
-  echo -e "(DEBUG) subfinder found: $(cat subfinder.txt | wc -l) subdomain (s)"
+  echo -e "(INFO) subfinder found: $(cat subfinder.txt | wc -l) subdomain (s)"
 
   python3 ./tools/Sublist3r/sublist3r.py -d $target -o sublist3r.txt
-  echo -e "(DEBUG) sublist3r found: $(cat sublist3r.txt | wc -l) subdomain (s)"
+  echo -e "(INFO) sublist3r found: $(cat sublist3r.txt | wc -l) subdomain (s)"
 
   python3 ./SubDomainizer/SubDomainizer.py -l target.txt -o SubDomainizer.txt -san all
-  echo -e "(DEBUG) SubDomainizer found: $(cat SubDomainizer.txt | wc -l) subdomain (s)"
+  echo -e "(INFO) SubDomainizer found: $(cat SubDomainizer.txt | wc -l) subdomain (s)"
 
   cat sublist3r.txt >> SubDomainizer.txt && cat subfinder.txt >> SubDomainizer.txt
   cat SubDomainizer.txt | sort -u > urls_no_http.txt
-  echo -e "(DEBUG) subdomain recound after filtering, found: $(cat SubDomainizer.txt | wc -l) subdomain (s)"
+  echo -e "(INFO) subdomain recound after filtering, found: $(cat SubDomainizer.txt | wc -l) subdomain (s)"
 
   cat urls_no_http.txt | assetfinder | sort -u > assetfinder.txt
-  echo -e "(DEBUG) sublist3r + SubDomainizer + assetfinder found: $(cat assetfinder.txt | wc -l) subdomain(s)"
+  echo -e "(INFO) sublist3r + SubDomainizer + assetfinder found: $(cat assetfinder.txt | wc -l) subdomain(s)"
 
   cat assetfinder.txt | gau -subs -b png,jpg,jpeg,html,txt,JPG | sort -u > gau.txt
-  echo -e "(DEBUG) gau found: $(cat gau.txt | wc -l) url(s) from this subdomains"
+  echo -e "(INFO) gau found: $(cat gau.txt | wc -l) url(s) from this subdomains"
 
   cat gau.txt | subjs | sort -u > subjs.txt
-  echo -e "(DEBUG) subjs found: $(cat subjs.txt | wc -l) javascript file(s) from this urls"
+  echo -e "(INFO) subjs found: $(cat subjs.txt | wc -l) javascript file(s) from this urls"
 }
 
 #Gather Endpoints From JsFiles
