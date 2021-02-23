@@ -30,17 +30,25 @@ use_recontools_individualy() {
 }
 
 combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetfinder + gau + subjs together
-  python3 ./SubDomainizer/SubDomainizer.py -l target.txt -o urls_no_http.txt -san all -b
+  target=$(head -n 1 filename)
+
+  python3 ./tools/Sublist3r/sublist3r.py -d $target -b -o sublist3r.txt
+  echo -e "(DEBUG) sublist3r found: $(cat urls_no_http.txt | wc -l) subdomain (s)"
+
+  python3 ./SubDomainizer/SubDomainizer.py -l target.txt -o SubDomainizer.txt -san all -b
   echo -e "(DEBUG) SubDomainizer found: $(cat urls_no_http.txt | wc -l) subdomain (s)"
 
+  cat sublist3r.txt >> SubDomainizer.txt
+  cat SubDomainizer | sort -u > urls_no_http.txt
+
   cat urls_no_http.txt | assetfinder | sort -u > assetfinder.txt
-  echo -e "(DEBUG) SubDomainizer + assetfinder found: $(cat assetfinder.txt | wc -l) subdomain (s)"
+  echo -e "(DEBUG) sublist3r + SubDomainizer + assetfinder found: $(cat assetfinder.txt | wc -l) subdomain(s)"
 
   cat assetfinder.txt | gau -subs -b png,jpg,jpeg,html,txt,JPG | sort -u > gau.txt
-  echo -e "(DEBUG) SubDomainizer + assetfinder + gau found: $(cat gau.txt | wc -l) url(s)"
+  echo -e "(DEBUG) gau found: $(cat gau.txt | wc -l) url(s) from this subdomains"
 
-  cat gau.txt | subjs | grep -v '?v=' | sort -u > subjs.txt
-  echo -e "(DEBUG) SubDomainizer + assetfinder + gau + subjs found: $(cat subjs.txt | wc -l) javascript file(s)"
+  cat gau.txt | subjs | sort -u > subjs.txt
+  echo -e "(DEBUG) subjs found: $(cat subjs.txt | wc -l) javascript file(s) from this urls"
 }
 
 #Gather Endpoints From JsFiles

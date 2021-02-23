@@ -14,6 +14,8 @@ echo -e "\e[36m \___/ (______/|_|    (______/ \____\_____|_| |_(_(___/|_| |_|\e[
 ############################################  RECON PART   #############################################################
 
 combine_subDomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetfinder + gau + subjs together
+
+
   python3 ./SubDomainizer/SubDomainizer.py -l target.txt -o urls_no_http.txt -san all
   echo -e "(DEBUG) SubDomainizer found: $(cat urls_no_http.txt | wc -l) subdomain (s)"
 
