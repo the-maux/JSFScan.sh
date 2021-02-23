@@ -55,7 +55,7 @@ combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetf
   echo -e "(INFO) gau found: $(cat gau.txt | wc -l) url(s) from assetfinder"
 
   cat gau.txt | subjs | sort -u > subjs.txt
-  echo -e "(INFO) subjs found: $(cat subjs.txt | wc -l) javascript file(s) from gau"
+  echo -e "(INFO) subjs found: $(cat subj_gau_assetfinder.txt | wc -l) javascript file(s) from gau"
 }
 
 #Gather Endpoints From JsFiles
@@ -73,14 +73,14 @@ endpoint_js() {
 
 regroup_found_and_filter() {
 #  cat gau_solo_urls.txt > all_urls.txt
-  cat subjs_url.txt >> all_urls.txt
+#  cat subjs_url.txt >> all_urls.txt
 #  cat hakrawler_urls.txt >> all_urls.txt
 #  cat gospider_url.txt >> all_urls.txt
 #  cat jsubfinder.txt >> all_urls.txt
 #  cat assetfinder_urls.txt >> all_urls.txt
 #  cat chaos.txt >>  all_urls.txt
 #  cat hakrawlerHttpx.txt >> all_urls.txt
-#  cat subj_gau_assetfinder.txt >> all_urls.txt
+  cat subj_gau_assetfinder.txt >> all_urls.txt
 
   echo "(INFO) Removing dead links with httpx & filtering duplicate url"
   # filtering dead link
