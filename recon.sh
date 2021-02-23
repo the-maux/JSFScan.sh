@@ -68,9 +68,10 @@ regroup_found_and_filter() {
   cat subj_gau_assetfinder.txt >> all_urls.txt
 
   echo "(INFO) Removing dead links with httpx & filtering duplicate url"
-  cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 | sort -u | grep -v '?v=' > urls_alive.txt
-
-  cat urls_alive.txt | grep -v "jquery" > urls.txt  # filtering classic lib with no impact
+  # filtering dead link
+  cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 > urls_alive.txt
+  # filtering duplicate & libs with no impact
+  cat urls_alive.txt | awk -F '?' '{ print $1 }' | grep -v "jquery" | sort -u > urls.txt
   number_of_file_found=$(cat urls.txt | wc -l)
   echo "(INFO) After filtering duplicate/offline/boring js files, we found: $((number_of_file_found)) files to analyse"
 
