@@ -19,8 +19,6 @@ use_recontools_individualy() {
   gospider -a -w -r -S target.txt -d 3 | grep -Eo "(http|https)://[^/\"].*\.js+" | sed "s#\] \- #\n#g" > gospider_url.txt
   echo -e "(INFO) gospider individually found: $(cat gospider_url.txt | wc -l) url(s)"
 
-  cat target.txt | httpx --silent | jsubfinder -s > jsubfinder.txt #TODO add in all urls.txt
-  echo -e "(INFO) jsubfinder individually found: $(cat jsubfinder.txt | wc -l) url(s)"
 
   cat target.txt | sed 's$https://$$' | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | xargs -I% -P10 sh -c 'hakrawler -plain -linkfinder -depth 5 -url %' | awk '{print $3}' | grep -E "\.js(?:onp?)?$" | sort -u > assetfinder_urls.txt
   echo -e "(INFO) assetfinder individually found: $(cat assetfinder_urls.txt | wc -l) url(s)"
@@ -82,6 +80,8 @@ regroup_found_and_filter() {
       exit 1
   fi
   cat urls.txt
+  cat urls.txt | jsubfinder -s > jsubfinder.txt #TODO add in all urls.txt
+  echo -e "(INFO) jsubfinder individually found: $(cat jsubfinder.txt | wc -l) url(s)"
 }
 
 recon() {  # Try to gain the maximum of uniq JS file from the target
