@@ -43,7 +43,7 @@ combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetf
 
   cat sublist3r.txt >> SubDomainizer.txt
   cat subfinder.txt >> SubDomainizer.txt
-  cat SubDomainizer.txt | sed 's$www.$$' |sort -u > urls_no_http.txt
+  cat SubDomainizer.txt | sed 's$www.$$' | sort -u > urls_no_http.txt
   echo -e "(INFO) After filtering duplicate, $(cat urls_no_http.txt | wc -l) subdomain(s) found"
   cat urls_no_http.txt
   echo "---------------------------------------------------------------------------------------------"
@@ -54,7 +54,7 @@ combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetf
   cat assetfinder.txt | gau -subs -b png,jpg,jpeg,html,txt,JPG | sort -u > gau.txt
   echo -e "(INFO) gau found: $(cat gau.txt | wc -l) url(s) from assetfinder"
 
-  cat gau.txt | subjs | sort -u > subjs.txt
+  cat gau.txt | subjs | sort -u > subj_gau_assetfinder.txt
   echo -e "(INFO) subjs found: $(cat subj_gau_assetfinder.txt | wc -l) javascript file(s) from gau"
 }
 
@@ -98,7 +98,7 @@ regroup_found_and_filter() {
       exit 1
   fi
   cat urls.txt
-  cat urls.txt | jsubfinder -s > jsubfinder.txt #TODO add in all urls.txt
+  cat urls.txt | jsubfinder > jsubfinder.txt #TODO add in all urls.txt
   echo -e "(INFO) jsubfinder individually found: $(cat jsubfinder.txt | wc -l) url(s)"
 }
 
@@ -111,6 +111,8 @@ recon() {  # Try to gain the maximum of uniq JS file from the target
 #  echo -e "\e[36m[+] Started gathering Endpoints\e[0m"
 #  endpoint_js
   regroup_found_and_filter
+  cat urls.txt > report.html
+  python3 tools/sendReportByMail.py
 }
 
 recon
