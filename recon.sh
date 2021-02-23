@@ -35,10 +35,10 @@ combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetf
   subfinder -d $target -silent > subfinder.txt
   echo -e "(INFO) subfinder found: $(cat subfinder.txt | wc -l) subdomain(s)"
 
-  python3 ./tools/Sublist3r/sublist3r.py -d $target -o sublist3r.txt
+  python3 ./tools/Sublist3r/sublist3r.py -d $target -o sublist3r.txt &> nooutput
   echo -e "(INFO) sublist3r found: $(cat sublist3r.txt | wc -l) subdomain(s)"
 
-  python3 ./tools/SubDomainizer/SubDomainizer.py -l target.txt -o SubDomainizer.txt -san all
+  python3 ./tools/SubDomainizer/SubDomainizer.py -l target.txt -o SubDomainizer.txt -san all  &> nooutput
   echo -e "(INFO) SubDomainizer found: $(cat SubDomainizer.txt | wc -l) subdomain(s)"
 
   cat sublist3r.txt >> SubDomainizer.txt
