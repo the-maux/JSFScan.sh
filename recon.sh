@@ -33,6 +33,7 @@ combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetf
   target=$(head -n 1 target.txt)
 
   python3 ./tools/Sublist3r/sublist3r.py -d $target -b -o sublist3r.txt
+  echo $target
   echo -e "(DEBUG) sublist3r found: $(cat urls_no_http.txt | wc -l) subdomain (s)"
 
   python3 ./SubDomainizer/SubDomainizer.py -l target.txt -o SubDomainizer.txt -san all -b
