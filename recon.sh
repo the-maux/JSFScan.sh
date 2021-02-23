@@ -33,13 +33,13 @@ combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetf
   target=$(head -n 1 target.txt | sed 's$https://$$')
 
   subfinder -dL target.txt -silent > subfinder.txt
-  echo -e "(INFO) subfinder found: $(cat subfinder.txt | wc -l) subdomain (s)"
+  echo -e "(INFO) subfinder found: $(cat subfinder.txt | wc -l) subdomain(s)"
 
   python3 ./tools/Sublist3r/sublist3r.py -d $target -o sublist3r.txt
-  echo -e "(INFO) sublist3r found: $(cat sublist3r.txt | wc -l) subdomain (s)"
+  echo -e "(INFO) sublist3r found: $(cat sublist3r.txt | wc -l) subdomain(s)"
 
   python3 ./SubDomainizer/SubDomainizer.py -l target.txt -o SubDomainizer.txt -san all
-  echo -e "(INFO) SubDomainizer found: $(cat SubDomainizer.txt | wc -l) subdomain (s)"
+  echo -e "(INFO) SubDomainizer found: $(cat SubDomainizer.txt | wc -l) subdomain(s)"
 
   cat sublist3r.txt >> SubDomainizer.txt && cat subfinder.txt >> SubDomainizer.txt
   cat SubDomainizer.txt | sort -u > urls_no_http.txt
