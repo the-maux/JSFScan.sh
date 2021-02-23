@@ -49,13 +49,13 @@ combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetf
   echo "---------------------------------------------------------------------------------------------"
 
   cat urls_no_http.txt | assetfinder | sort -u > assetfinder.txt
-  echo -e "(INFO) assetfinder found: $(cat assetfinder.txt | wc -l) subdomain(s)"
+  echo -e "(INFO) assetfinder found $(cat assetfinder.txt | wc -l) subdomain(s) from sublist3r\subfinder\SubDomainizer"
 
   cat assetfinder.txt | gau -subs -b png,jpg,jpeg,html,txt,JPG | sort -u > gau.txt
-  echo -e "(INFO) gau found: $(cat gau.txt | wc -l) url(s) from this url(s)"
+  echo -e "(INFO) gau found: $(cat gau.txt | wc -l) url(s) from assetfinder"
 
   cat gau.txt | subjs | sort -u > subjs.txt
-  echo -e "(INFO) subjs found: $(cat subjs.txt | wc -l) javascript file(s) from this urls"
+  echo -e "(INFO) subjs found: $(cat subjs.txt | wc -l) javascript file(s) from gau"
 }
 
 #Gather Endpoints From JsFiles
