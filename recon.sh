@@ -32,15 +32,18 @@ use_recontools_individualy() {
 combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetfinder + gau + subjs together
   target=$(head -n 1 target.txt | sed 's$https://$$')
 
-  echo $target
-  python3 ./tools/Sublist3r/sublist3r.py -d $target -b -o sublist3r.txt
-  echo -e "(DEBUG) sublist3r found: $(cat urls_no_http.txt | wc -l) subdomain (s)"
+  subfinder -dL target.txt -silent > subfinder.txt
+  echo -e "(DEBUG) subfinder found: $(cat subfinder.txt | wc -l) subdomain (s)"
 
-  python3 ./SubDomainizer/SubDomainizer.py -l target.txt -o SubDomainizer.txt -san all -b
-  echo -e "(DEBUG) SubDomainizer found: $(cat urls_no_http.txt | wc -l) subdomain (s)"
+  python3 ./tools/Sublist3r/sublist3r.py -d $target -o sublist3r.txt
+  echo -e "(DEBUG) sublist3r found: $(cat sublist3r.txt | wc -l) subdomain (s)"
 
-  cat sublist3r.txt >> SubDomainizer.txt
-  cat SubDomainizer | sort -u > urls_no_http.txt
+  python3 ./SubDomainizer/SubDomainizer.py -l target.txt -o SubDomainizer.txt -san all
+  echo -e "(DEBUG) SubDomainizer found: $(cat SubDomainizer.txt | wc -l) subdomain (s)"
+
+  cat sublist3r.txt >> SubDomainizer.txt && cat subfinder.txt >> SubDomainizer.txt
+  cat SubDomainizer.txt | sort -u > urls_no_http.txt
+  echo -e "(DEBUG) subdomain recound after filtering, found: $(cat SubDomainizer.txt | wc -l) subdomain (s)"
 
   cat urls_no_http.txt | assetfinder | sort -u > assetfinder.txt
   echo -e "(DEBUG) sublist3r + SubDomainizer + assetfinder found: $(cat assetfinder.txt | wc -l) subdomain(s)"

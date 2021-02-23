@@ -29,16 +29,17 @@
 #
 ## install go tools
 #RUN go get github.com/tomnomnom/waybackurls
-#RUN GO111MODULE=on go get -v github.com/lc/gau
-#RUN GO111MODULE=on go get -v github.com/lc/subjs
-#RUN GO111MODULE=on go get -v github.com/projectdiscovery/httpx/cmd/httpx
-#RUN GO111MODULE=on go get -v github.com/hakluke/hakrawler
 #RUN GO111MODULE=on go get -u github.com/tomnomnom/assetfinder
+#RUN GO111MODULE=on go get -v github.com/hakluke/hakrawler
 #RUN GO111MODULE=on go get -u github.com/jaeles-project/gospider
 #RUN GO111MODULE=on go get -u github.com/dwisiswant0/unew
 #RUN GO111MODULE=on go get -u github.com/shenwei356/rush
-#RUN GO111MODULE=on go get -v github.com/projectdiscovery/chaos-client/cmd/chaos
 #RUN GO111MODULE=on go get -u github.com/hiddengearz/jsubfinder
+#RUN GO111MODULE=on go get -v github.com/projectdiscovery/httpx/cmd/httpx
+#RUN GO111MODULE=on go get -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
+#RUN GO111MODULE=on go get -v github.com/projectdiscovery/chaos-client/cmd/chaos
+#RUN GO111MODULE=on go get -v github.com/lc/gau
+#RUN GO111MODULE=on go get -v github.com/lc/subjs
 #RUN wget https://raw.githubusercontent.com/hiddengearz/jsubfinder/master/.jsf_signatures.yaml && mv .jsf_signatures.yaml ~/.jsf_signatures.yaml
 #WORKDIR /root
 #
