@@ -22,8 +22,6 @@ def sendMail():
         message.add_attachment(file.read(), subtype=mime_subtype, filename='urls.txt')
         mail_server = smtplib.SMTP_SSL('smtp.gmail.com')
         mail_server.login(username, password)
-        print(type(message))
-        print(message)
         mail_server.send_message(message)
         mail_server.quit()
     print('(DEBUG) Sending report to the user by mail: OK')

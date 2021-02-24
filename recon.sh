@@ -95,7 +95,7 @@ regroup_found_and_filter() {
       echo "(ERROR) No JS file found during recon, Exiting..."
       exit 1
   fi
-  #cat urls.txt
+
   cat urls.txt | jsubfinder > jsubfinder.txt #TODO add in all urls.txt
   echo -e "(INFO) jsubfinder individually found: $(cat jsubfinder.txt | wc -l) url(s)"
 }
