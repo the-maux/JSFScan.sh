@@ -16,10 +16,12 @@ def sendMail():
     message.set_content(body)
     mime_type, _ = mimetypes.guess_type('report.html')
     mime_type, mime_subtype = mime_type.split('/')
+    username = str(os.environ['USER_EMAIL'])
+    password = str(os.environ['USER_PASSWORD'])
     with open('report.html', 'r') as file:
         message.add_attachment(file.read(), subtype=mime_subtype, filename='urls.txt')
         mail_server = smtplib.SMTP_SSL('smtp.gmail.com')
-        mail_server.login(os.environ['USER_EMAIL'], os.environ['USER_PASSWORD'])
+        mail_server.login(username, password)
         mail_server.send_message(message)
         mail_server.quit()
     print('(DEBUG) Sending report to the user by mail: OK')
