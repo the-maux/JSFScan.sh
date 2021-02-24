@@ -70,14 +70,14 @@ endpoint_js() {
 }
 
 regroup_found_and_filter() {
-#  cat gau_solo_urls.txt > all_urls.txt
-#  cat subjs_url.txt >> all_urls.txt
-#  cat hakrawler_urls.txt >> all_urls.txt
-#  cat gospider_url.txt >> all_urls.txt
-#  cat jsubfinder.txt >> all_urls.txt
-#  cat assetfinder_urls.txt >> all_urls.txt
-#  cat chaos.txt >>  all_urls.txt
-#  cat hakrawlerHttpx.txt >> all_urls.txt
+  cat gau_solo_urls.txt > all_urls.txt
+  cat subjs_url.txt >> all_urls.txt
+  cat hakrawler_urls.txt >> all_urls.txt
+  cat gospider_url.txt >> all_urls.txt
+  cat jsubfinder.txt >> all_urls.txt
+  cat assetfinder_urls.txt >> all_urls.txt
+  cat chaos.txt >>  all_urls.txt
+  cat hakrawlerHttpx.txt >> all_urls.txt
   cat subj_gau_assetfinder.txt >> all_urls.txt
 
   echo "(INFO) Removing dead links with httpx & filtering duplicate url"
@@ -102,12 +102,12 @@ regroup_found_and_filter() {
 
 recon() {  # Try to gain the maximum of uniq JS file from the target
   echo "Searching JSFiles on target(s):" && cat target.txt
-  #echo -e "\n\e[36m[+] Searching JsFiles-links individualy gau & subjs & hakrawler & assetfind & gospider \e[0m"
-  #use_recontools_individualy # result in gau_solo_urls.txt subjs_url.txt hakrawler_urls.txt gospider_url.txt
+  echo -e "\n\e[36m[+] Searching JsFiles-links individualy gau & subjs & hakrawler & assetfind & gospider \e[0m"
+  use_recontools_individualy # result in gau_solo_urls.txt subjs_url.txt hakrawler_urls.txt gospider_url.txt
   echo -e "\e[36m[+] Searching JsFiles-links mixing gau & subjs & assetfinder \e[0m"
   combine_subdomainizer_assetfinder_gau_subjs  # result in subjs.txt
-#  echo -e "\e[36m[+] Started gathering Endpoints\e[0m"
-#  endpoint_js
+  echo -e "\e[36m[+] Started gathering Endpoints\e[0m"
+  endpoint_js
   regroup_found_and_filter
   cat urls.txt > report.html
   python3 tools/sendReportByMail.py
