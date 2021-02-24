@@ -16,8 +16,8 @@ def sendMail():
     message.set_content(body)
     mime_type, _ = mimetypes.guess_type('report.html')
     mime_type, mime_subtype = mime_type.split('/')
-    username = bytes(os.environ['USER_EMAIL'])
-    password = bytes(os.environ['USER_PASSWORD'])
+    username = os.environ['USER_EMAIL']
+    password = os.environ['USER_PASSWORD']
     print(username)
     print(type(username))
     with open('report.html', 'r') as file:

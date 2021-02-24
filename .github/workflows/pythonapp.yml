@@ -11,4 +11,4 @@ jobs:
     - name: Build the Docker image
       run: docker build -t themaux/jsfscan:local .
     - name: Start the scan
-      run: docker run -e GITHUB_PASSWD="${{ secrets.GITHUB_TOKEN }}" -e USER_EMAIL="${{ secrets.USER_PASSWORD }}" -e USER_PASSWORD="${{ secrets.USER_PASSWORD }}" themaux/jsfscan:local
+      run: docker run -e GITHUB_PASSWD="${{ secrets.GITHUB_TOKEN }}" -e USER_EMAIL="${{ secrets.USER_EMAIL }}" -e USER_PASSWORD="${{ secrets.USER_PASSWORD }}" themaux/jsfscan:local
