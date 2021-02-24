@@ -17,7 +17,7 @@ def sendMail():
     mime_type, _ = mimetypes.guess_type('report.html')
     mime_type, mime_subtype = mime_type.split('/')
     with open('report.html', 'r') as file:
-        message.add_attachment(file.read(), maintype=mime_type, subtype=mime_subtype, filename='urls.txt')
+        message.add_attachment(file.read(), subtype=mime_subtype, filename='urls.txt')
         mail_server = smtplib.SMTP_SSL('smtp.gmail.com')
         mail_server.login(os.environ['USER_EMAIL'], os.environ['USER_PASSWORD'])
         mail_server.send_message(message)
