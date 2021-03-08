@@ -33,7 +33,7 @@
 #RUN GO111MODULE=on go get -v github.com/hakluke/hakrawler
 #RUN GO111MODULE=on go get -u github.com/jaeles-project/gospider
 #RUN GO111MODULE=on go get -u github.com/dwisiswant0/unew
-#RUN GO111MODULE=on go get -u github.com/shenwei356/rush
+# # No need, cause 1 target: RUN GO111MODULE=on go get -u github.com/shenwei356/rush
 #RUN GO111MODULE=on go get -u github.com/hiddengearz/jsubfinder
 #RUN GO111MODULE=on go get -v github.com/projectdiscovery/httpx/cmd/httpx
 #RUN GO111MODULE=on go get -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder

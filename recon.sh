@@ -24,8 +24,8 @@ use_recontools_individualy() {
 
   cat target.txt | chaos -silent | httpx -silent | xargs -I@ -P20 sh -c 'gospider -a -s "@" -d 2' | grep -Eo "(http|https)://[^/"].*.js+" | sed "s#] > chaos.txt #TODO add in all urls.txt
   echo -e "(INFO) chaos + wayback found: $(cat chaos.txt | wc -l) url(s)"
-
-  cat target.txt | rush -j 100 'hakrawler -js -plain -usewayback -depth 6 -scope subs -url {} | unew > hakrawlerHttpx.txt'
+  #TODO: test -linkfinder
+  cat target.txt | hakrawler -js -plain -usewayback -depth 3 -scope subs | unew > hakrawlerHttpx.txt
   echo -e "(INFO) hakrawler + wayback found: $(cat hakrawlerHttpx.txt | wc -l) url(s)"
 }
 
