@@ -2,23 +2,50 @@ import os
 import smtplib
 import mimetypes
 from email.message import EmailMessage
+from zipfile import ZipFile
+from zipfile import ZIP_DEFLATED
+
+WORKDIR = '/opt/JSFScan.sh'
 
 
-def sendMail():
-    message = EmailMessage()
+def getListOfTxtFilesToSend():
+    result = list()
+    for fileInDirectory in  os.listdir(path=WORKDIR):
+        if fileInDirectory.endswith('.txt'):
+            result.append(fileInDirectory)
+    return result
+
+
+def buildReportArchive():
+    """ Zip all the *.txt files in 1 file archive.zip"""
+    with ZipFile(WORKDIR + 'logs.zip', mode='w', compression=ZIP_DEFLATED) as PJFile:
+        for logFile in getListOfTxtFilesToSend():
+            if logFile is not None:  # file is None when not found
+                print(f'\t Compressing file: {logFile}')
+                PJFile.write(logFile)
+    return WORKDIR + 'result.zip'
+
+
+def buildMail():
     sender = os.environ['USER_EMAIL']
     recipient = os.environ['USER_EMAIL']
+    message = EmailMessage()
     message['From'] = sender
     message['To'] = recipient
     message['Subject'] = 'Analyze of target over'
     body = """Hello;
-    You can find the html report in attachement."""
+        You can find the html report in attachement."""
     message.set_content(body)
-    mime_type, _ = mimetypes.guess_type('report.html')
+    return message
+
+
+def sendMail():
+    mime_type, _ = mimetypes.guess_type('result.zip')
     mime_type, mime_subtype = mime_type.split('/')
     username = os.environ['USER_EMAIL']
     password = os.environ['USER_PASSWORD']
-    with open('report.html', 'r') as file:  # TODO parse if the mail was sent
+    message = buildMail()
+    with open(buildReportArchive(), 'r') as file:
         message.add_attachment(file.read(), subtype=mime_subtype, filename='urls.txt')
         mail_server = smtplib.SMTP_SSL('smtp.gmail.com')
         mail_server.login(username, password)

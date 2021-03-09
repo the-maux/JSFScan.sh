@@ -88,16 +88,19 @@ regroup_found_and_filter() {
   # filtering dead link
   cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 > urls_alive.txt
   # filtering duplicate & libs with no impact
-  cat urls_alive.txt | awk -F '?' '{ print $1 }' | grep -v "jquery" | sort -u > urls.txt
+  cat urls_alive.txt | awk -F '?' '{ print $1 }' | grep -v "jquery" | grep $(cat target.txt | sed 's$https://$$') | unew > urls.txt
   number_of_file_found=$(cat urls.txt | wc -l)
   echo "(INFO) Result of filters: Found $((number_of_file_found)) javascripts files to analyse"
+
+  cat urls.txt | grep $(cat target.txt | sed 's$https://$$') > urls_filter.txt  # Only take if target domain is present
+  number_of_file_found_post_filter=$(cat urls_filter.txt | wc -l)
+  echo "(INFO) Result of BIG filters: Found $((number_of_file_found_post_filter)) javascripts files to analyse"
 
   if [ $number_of_file_found = "0" ]
   then
       echo "(ERROR) No JS file found during recon, Exiting..."
       exit 1
   fi
-
   echo "Searching with jsubfinder on urls.txt, exemple of targets:"
   cat urls.txt | tail -n 50
   cat urls.txt | jsubfinder > jsubfinder.txt #TODO add in all urls.txt
