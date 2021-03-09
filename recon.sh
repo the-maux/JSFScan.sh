@@ -62,8 +62,8 @@ combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetf
 endpoint_js() {
   # TOKNOW: linkfinder doesnt work if https is present
   echo "Trying to find endpoint with this target:"
-  cat urls_no_http.txt
-  interlace -tL urls_no_http.txt -threads 5 -c "python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> all_endpoints.txt" --silent --no-bar
+  cat urls_no_http.txt | sed 's$https://$$' | awk '{print "https://" $0}' > search_endpoint.txt
+  interlace -tL search_endpoint.txt -threads 5 -c "python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> all_endpoints.txt" --silent --no-bar
   number_of_endpoint_found=$(cat all_endpoints.txt | wc -l)
   if [ $number_of_endpoint_found = "0" ]
   then
