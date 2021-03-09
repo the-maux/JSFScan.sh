@@ -61,6 +61,8 @@ combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetf
 #Gather Endpoints From JsFiles
 endpoint_js() {
   # TOKNOW: linkfinder doesnt work if https is present
+  echo "Trying to find endpoint with this target:"
+  cat urls_no_http.txt
   interlace -tL urls_no_http.txt -threads 5 -c "python3 ./tools/LinkFinder/linkfinder.py -d -i _target_ -o cli >> all_endpoints.txt" --silent --no-bar
   number_of_endpoint_found=$(cat all_endpoints.txt | wc -l)
   if [ $number_of_endpoint_found = "0" ]
@@ -76,21 +78,19 @@ regroup_found_and_filter() {
   cat subjs_url.txt >> all_urls.txt
   cat hakrawler_urls.txt >> all_urls.txt
   cat gospider_url.txt >> all_urls.txt
-  cat jsubfinder.txt >> all_urls.txt
   cat assetfinder_urls.txt >> all_urls.txt
   cat chaos.txt >>  all_urls.txt
   cat hakrawlerHttpx.txt >> all_urls.txt
   cat subj_gau_assetfinder.txt >> all_urls.txt
 
-  echo "(INFO) Removing dead links with httpx & filtering duplicate url"
+  number_of_file_found=$(cat all_urls.txt | wc -l)
+  echo "(INFO) Before filtering duplicate/offline/useless files, we found: $((number_of_file_found)) files to analyse"
   # filtering dead link
   cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 > urls_alive.txt
   # filtering duplicate & libs with no impact
-  number_of_file_found=$(cat urls_alive.txt | wc -l)
-  echo "(INFO) Before filter, we found: $((number_of_file_found)) files to analyse"
   cat urls_alive.txt | awk -F '?' '{ print $1 }' | grep -v "jquery" | sort -u > urls.txt
   number_of_file_found=$(cat urls.txt | wc -l)
-  echo "(INFO) After filtering duplicate/offline/boring js files, we found: $((number_of_file_found)) files to analyse"
+  echo "(INFO) Result of filters: Found $((number_of_file_found)) javascripts files to analyse"
 
   if [ $number_of_file_found = "0" ]
   then
@@ -98,6 +98,8 @@ regroup_found_and_filter() {
       exit 1
   fi
 
+  echo "Searching with jsubfinder on urls.txt, exemple of targets:"
+  cat urls.txt | tail -n 50
   cat urls.txt | jsubfinder > jsubfinder.txt #TODO add in all urls.txt
   echo -e "(INFO) jsubfinder individually found: $(cat jsubfinder.txt | wc -l) url(s)"
 }

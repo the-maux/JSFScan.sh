@@ -18,13 +18,17 @@ def sendMail():
     mime_type, mime_subtype = mime_type.split('/')
     username = os.environ['USER_EMAIL']
     password = os.environ['USER_PASSWORD']
-    with open('report.html', 'r') as file:
+    with open('report.html', 'r') as file:  # TODO parse if the mail was sent
         message.add_attachment(file.read(), subtype=mime_subtype, filename='urls.txt')
         mail_server = smtplib.SMTP_SSL('smtp.gmail.com')
         mail_server.login(username, password)
-        mail_server.send_message(message)
+        retour_mail = mail_server.send_message(message)
+        print(f'Server SMTP result status : {retour_mail}')
         mail_server.quit()
-    print('(DEBUG) Sending report to the user by mail: OK')
+        print('(DEBUG) Sending report to the user by mail: OK')
+        exit(0)
+    print('(DEBUG) Sending report to the user by mail: KO')
+    exit(-1)
 
 
 if __name__ == "__main__":
