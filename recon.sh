@@ -6,21 +6,21 @@ export CHAOS_KEY=$CHAOS_TOKEN
 #Gather JSFilesUrls with gau / subjs / hakrawler / gospider / jsubfinder / assetfinder / chaos / wayback
 use_recontools_individualy() {
   # TOKNOW: assetfinder is not working good with "https://"
-  cat target.txt | gau | grep -iE "\.js$" | sort -u > gau_solo_urls.txt
-  echo -e "(INFO) gau individually found: $(cat gau_solo_urls.txt | wc -l) url(s)"
-
-  cat gau_solo_urls.txt | subjs > subjs_url.txt
-  echo -e "(INFO) gau + subjs found: $(cat subjs_url.txt | wc -l) url(s)"
-
-  cat target.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
-  echo -e "(INFO) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
-
-  # TOKNOW: gospider is not working good without the "https://"
-  gospider -a -w -r -S target.txt -d 3 | grep -Eo "(http|https)://[^/\"].*\.js+" | sed "s#\] \- #\n#g" > gospider_url.txt
-  echo -e "(INFO) gospider individually found: $(cat gospider_url.txt | wc -l) url(s)"
-
-  cat target.txt | sed 's$https://$$' | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | xargs -I% -P10 sh -c 'hakrawler -plain -linkfinder -depth 5 -url %' | awk '{print $3}' | grep -E "\.js(?:onp?)?$" | sort -u > assetfinder_urls.txt
-  echo -e "(INFO) assetfinder individually found: $(cat assetfinder_urls.txt | wc -l) url(s)"
+#  cat target.txt | gau | grep -iE "\.js$" | sort -u > gau_solo_urls.txt
+#  echo -e "(INFO) gau individually found: $(cat gau_solo_urls.txt | wc -l) url(s)"
+#
+#  cat gau_solo_urls.txt | subjs > subjs_url.txt
+#  echo -e "(INFO) gau + subjs found: $(cat subjs_url.txt | wc -l) url(s)"
+#
+#  cat target.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
+#  echo -e "(INFO) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
+#
+#  # TOKNOW: gospider is not working good without the "https://"
+#  gospider -a -w -r -S target.txt -d 3 | grep -Eo "(http|https)://[^/\"].*\.js+" | sed "s#\] \- #\n#g" > gospider_url.txt
+#  echo -e "(INFO) gospider individually found: $(cat gospider_url.txt | wc -l) url(s)"
+#
+#  cat target.txt | sed 's$https://$$' | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | xargs -I% -P10 sh -c 'hakrawler -plain -linkfinder -depth 5 -url %' | awk '{print $3}' | grep -E "\.js(?:onp?)?$" | sort -u > assetfinder_urls.txt
+#  echo -e "(INFO) assetfinder individually found: $(cat assetfinder_urls.txt | wc -l) url(s)"
 
   cat target.txt | chaos -silent | httpx -silent | xargs -I@ -P20 sh -c 'gospider -a -s "@" -d 2' | grep -Eo "(http|https)://[^/"].*.js+" | sed "s#] > chaos.txt #TODO add in all urls.txt
   echo -e "(INFO) chaos + wayback found: $(cat chaos.txt | wc -l) url(s)"
@@ -112,12 +112,12 @@ recon() {  # Try to gain the maximum of uniq JS file from the target
   echo -e "\n\e[36m[+] Searching JsFiles-links individualy gau & subjs & hakrawler & assetfind & gospider \e[0m"
   use_recontools_individualy # result in gau_solo_urls.txt subjs_url.txt hakrawler_urls.txt gospider_url.txt
   echo -e "\e[36m[+] Searching JsFiles-links mixing gau & subjs & assetfinder \e[0m"
-  combine_subdomainizer_assetfinder_gau_subjs  # result in subjs.txt
-  echo -e "\e[36m[+] Started gathering Endpoints\e[0m"
-  endpoint_js
-  regroup_found_and_filter
-  cat urls.txt > report.html
-  python3 tools/sendReportByMail.py
+#  combine_subdomainizer_assetfinder_gau_subjs  # result in subjs.txt
+#  echo -e "\e[36m[+] Started gathering Endpoints\e[0m"
+#  endpoint_js
+#  regroup_found_and_filter
+#  cat urls.txt > report.html
+#  python3 tools/sendReportByMail.py
 }
 
 recon
