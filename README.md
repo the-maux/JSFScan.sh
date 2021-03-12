@@ -1,4 +1,5 @@
-#### Forked from https://github.com/KathanP19/JSFScan.sh
+[![JSFScan](https://github.com/the-maux/JSFScan.sh/actions/workflows/jsfs_recon.yml/badge.svg)](https://github.com/the-maux/JSFScan.sh/actions/workflows/jsfs_recon.yml)  
+#### Forked from https://github.com/KathanP19/JSFScan.sh 
 
 Script made for javascript recon automation in bugbounty;
 It will scan a domain to find all interesting javascript files,
@@ -53,6 +54,8 @@ Once Js files collected, it send the results to your mail or in your local
 
 
 #### TODO:
-- Full chaos support
 - Improve GithubActions report (build a workflow when job are more long than 6hours)
-- Gif exemples
+- Mix all the recon tools together to find more domain
+- Make a Light / Deep mode to let run for infinite if thats need
+- Make a no mail option, to let people work only in local
+- Informe #bugbountytips when ready 
