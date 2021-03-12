@@ -4,18 +4,13 @@ on: [push]
 
 jobs:
   JSFScan:
-
-    runs-on: themaux/jsfscan:latest
+    container:
+      image: themaux/jsfscan:latest
+      env:
+        USER_EMAIL: ${{ secrets.USER_EMAIL }}
+        USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
+        CHAOS_KEY: ${{ secrets.CHAOS_KEY }}
     steps:
-    - uses: actions/checkout@v1
-    - name: Build the Docker image
-      run: docker build -t themaux/jsfscan:local .
-
-
-    - name: Start the scan
-      run: docker run -e GITHUB_PASSWD="${{ secrets.GITHUB_TOKEN }}"
-        -e USER_EMAIL="${{ secrets.USER_EMAIL }}"
-        -e USER_PASSWORD="${{ secrets.USER_PASSWORD }}"
-        -e CHAOS_KEY="${{ secrets.CHAOS_KEY }}"
-        themaux/jsfscan:local
-
+    - uses: actions/checkout@v2
+    - name: Start scan
+      run: /bin/bash ./recon.sh
