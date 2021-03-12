@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
 deep_and_long_recon() {
-  cat target.txt | sed 's$https://$$' | chaos -silent | httpx -silent > chaos.txt
+  cat target.txt | sed 's$https://$$' | chaos -silent | waybackurls | httpx -silent > chaos.txt
   # TOOLONG: xargs -I@ -P20 sh -c 'gospider -a -s "@" -d 2' | grep -Eo "(http|https)://[^/"].*.js+" | sed "s#] > chaos.txt #TODO add in all urls.txt
   echo -e "(INFO) chaos + wayback found: $(cat chaos.txt | wc -l) url(s)"
-  cat chaos.txt
 
   # Removing hakrawler, cause its take too long for github actions ... more than 6hours :(
   #  cat target.txt | hakrawler -js -plain -usewayback -depth 3 -scope subs | unew > hakrawlerHttpx.txt
@@ -15,6 +14,11 @@ deep_and_long_recon() {
 }
 
 use_recontools_individualy() {
+  # Using chaos + waybackurls
+  cat target.txt | sed 's$https://$$' | chaos -silent | waybackurls | httpx -silent > chaos.txt
+  echo -e "(INFO) chaos + wayback found: $(cat chaos.txt | wc -l) url(s)"
+
+  # Using gau
   cat target.txt | gau | grep -iE "\.js$" | sort -u > gau_solo_urls.txt
   echo -e "(INFO) gau individually found: $(cat gau_solo_urls.txt | wc -l) url(s)"
 
@@ -26,13 +30,13 @@ use_recontools_individualy() {
   gospider -a -w -r -S target.txt -d 3 | grep -Eo "(http|https)://[^/\"].*\.js+" | sed "s#\] \- #\n#g" > gospider_url.txt
   echo -e "(INFO) gospider individually found: $(cat gospider_url.txt | wc -l) url(s)"
 
+  # Using subjs
   cat gau_solo_urls.txt | subjs > subjs_url.txt
   echo -e "(INFO) gau + subjs found: $(cat subjs_url.txt | wc -l) url(s)"
 
+  # Using hakrawler
   cat target.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
   echo -e "(INFO) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
-
-  #assetfinder http://tesla.com | waybackurls | grep -E "\.json(?:onp?)?$" | anew
 }
 
 combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetfinder + gau + subjs together
@@ -114,11 +118,11 @@ regroup_found_and_filter() {
 
 recon() {  # Try to gain the maximum of uniq JS file from the target
   echo "Searching JSFiles on target(s):" && cat target.txt
-  echo -e "\n\e[36m[+] Searching JsFiles-links individualy gau & subjs & hakrawler & assetfind & gospider \e[0m"
-  #use_recontools_individualy # result in gau_solo_urls.txt subjs_url.txt hakrawler_urls.txt gospider_url.txt
+  echo -e "\n\e[36m[+] Searching with chaos & gau & subjs & hakrawler & assetfinder & gospider \e[0m"
+  use_recontools_individualy # result in gau_solo_urls.txt subjs_url.txt hakrawler_urls.txt gospider_url.txt
   echo -e "\e[36m[+] Searching JsFiles-links mixing gau & subjs & assetfinder \e[0m"
   #combine_subdomainizer_assetfinder_gau_subjs  # result in subjs.txt
-  deep_and_long_recon
+  #deep_and_long_recon
   echo -e "\e[36m[+] Started gathering Endpoints\e[0m"
   endpoint_js
   regroup_found_and_filter
