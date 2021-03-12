@@ -6,6 +6,8 @@ Once Js files collected, it send the results to your mail or in your local
 
 ## Usage:
 
+`TOKNOW:` If you dont want to get the result by mail, just dont set the var USER_EMAIL
+
 ### Use throw Github Actions 
 1. Fork the project
 2. Replace the domain in the file target.txt, with your target
@@ -13,7 +15,6 @@ Once Js files collected, it send the results to your mail or in your local
 3. Push, and wait GithubActions to end
 
 ### Use throw Docker
-`TOKNOW:` If you dont want to get the result by mail, just dont set the var USER_EMAIL
 1. docker build -t themaux/jsfscan:local .
 2. Replace the domain in the file target.txt, with your target
 3. docker run -e GITHUB_PASSWD="${{ secrets.GITHUB_TOKEN }}" \ 
