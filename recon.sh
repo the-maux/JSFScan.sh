@@ -11,35 +11,14 @@ deep_and_long_recon() {
 
   #cat target.txt | sed 's$https://$$' | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | sort -u > assetfinder_urls.txt
   #TOLONG: | xargs -I% -P10 sh -c 'hakrawler -plain -linkfinder -depth 5 -url %' | awk '{print $3}' | grep -E "\.js(?:onp?)?$" |
+
+  # TOKNOW: gospider is not working good without the "https://"
+  #gospider -a -w -r -S target.txt -d 3 | grep -Eo "(http|https)://[^/\"].*\.js+" | sed "s#\] \- #\n#g" > gospider_url.txt
+  #echo -e "(INFO) gospider individually found: $(cat gospider_url.txt | wc -l) url(s)"
 }
 
 use_recontools_individualy() {
-  # Using chaos + waybackurls
-  cat target.txt | sed 's$https://$$' | chaos -silent | waybackurls | httpx -silent > chaos.txt
-  echo -e "(INFO) chaos + wayback found: $(cat chaos.txt | wc -l) url(s)"
-
-  # Using gau
-  cat target.txt | gau | grep -iE "\.js$" | sort -u > gau_solo_urls.txt
-  echo -e "(INFO) gau individually found: $(cat gau_solo_urls.txt | wc -l) url(s)"
-
-  #TOKNOW: assetfinder is not working good with "https://"
-  cat target.txt | sed 's$https://$$' | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | sort -u > assetfinder_urls.txt
-  echo -e "(INFO) assetfinder individually found: $(cat assetfinder_urls.txt | wc -l) url(s)"
-
-  # TOKNOW: gospider is not working good without the "https://"
-  gospider -a -w -r -S target.txt -d 3 | grep -Eo "(http|https)://[^/\"].*\.js+" | sed "s#\] \- #\n#g" > gospider_url.txt
-  echo -e "(INFO) gospider individually found: $(cat gospider_url.txt | wc -l) url(s)"
-
-  # Using subjs
-  cat gau_solo_urls.txt | subjs > subjs_url.txt
-  echo -e "(INFO) gau + subjs found: $(cat subjs_url.txt | wc -l) url(s)"
-
-  # Using hakrawler
-  cat target.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
-  echo -e "(INFO) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
-}
-
-combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetfinder + gau + subjs together
+  #TODO: combine all this tool to maximize the result, for the just run 1 by 1 than filtering result for duplicates
   target=$(head -n 1 target.txt | sed 's$https://$$')
 
   subfinder -d $target -silent > subfinder.txt
@@ -56,19 +35,34 @@ combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetf
   cat SubDomainizer.txt | sed 's$www.$$' | sort -u > urls_no_http.txt
   echo -e "(INFO) After filtering duplicate, $(cat urls_no_http.txt | wc -l) subdomain(s) found"
 
-  cat urls_no_http.txt | assetfinder | grep $target | sort -u > assetfinder.txt
-  echo -e "(INFO) assetfinder found $(cat assetfinder.txt | wc -l) link(s) from sublist3r\subfinder\SubDomainizer"
+  # Using chaos + waybackurls
+  cat target.txt | sed 's$https://$$' | chaos -silent | waybackurls | httpx -silent > chaos.txt
+  echo -e "(INFO) chaos + wayback found: $(cat chaos.txt | wc -l) url(s)"
 
-  cat assetfinder.txt | gau -subs -b png,jpg,jpeg,html,txt,JPG,eot,css,ttf,svg,woff,pdf,xml,PNG,woff2,ico,webp,php,gif | unew > gau.txt
-  echo -e "(INFO) gau found: $(cat gau.txt | wc -l) url(s) from assetfinder"
+  # Using gau
+  cat target.txt | gau | grep -iE "\.js$" | sort -u > gau_solo_urls.txt
+  echo -e "(INFO) gau individually found: $(cat gau_solo_urls.txt | wc -l) url(s)"
 
-  cat gau.txt | subjs | sort -u > subj_gau_assetfinder.txt
-  echo -e "(INFO) subjs found: $(cat subj_gau_assetfinder.txt | wc -l) javascript file(s) from gau"
+  #TOKNOW: assetfinder is not working good with "https://"
+  cat target.txt | sed 's$https://$$' | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | sort -u > assetfinder_urls.txt
+  echo -e "(INFO) assetfinder individually found: $(cat assetfinder_urls.txt | wc -l) url(s)"
+
+  # Using hakrawler
+  cat target.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
+  echo -e "(INFO) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
 }
 
-#Gather new endpoints From JsFiles
-endpoint_js() {
-  echo "Trying to find endpoint with this target:"
+#Gather new endpoints From domain / path / JsFiles found
+search_jsFile_from_domain_found() {
+  # Using subjs
+  cat gau_solo_urls.txt | subjs > subjs_url.txt
+  echo -e "(INFO) gau + subjs found: $(cat subjs_url.txt | wc -l) url(s)"
+
+  echo "Searching with jsubfinder on urls.txt, exemple of targets:"
+  cat urls.txt | tail -n 50
+  cat urls.txt | jsubfinder > jsubfinder.txt #TODO add in all urls.txt
+  echo -e "(INFO) jsubfinder individually found: $(cat jsubfinder.txt | wc -l) url(s)"
+
   # TOKNOW: linkfinder doesnt work if https is not present
   cat urls_no_http.txt
   cat urls_no_http.txt | sed 's$https://$$' | awk '{print "https://" $0}' > search_endpoint.txt # tobe sur there are alway a https://
@@ -110,10 +104,6 @@ regroup_found_and_filter() {
       echo "(ERROR) No JS file found during recon, Exiting..."
       exit 1
   fi
-  echo "Searching with jsubfinder on urls.txt, exemple of targets:"
-  cat urls.txt | tail -n 50
-  cat urls.txt | jsubfinder > jsubfinder.txt #TODO add in all urls.txt
-  echo -e "(INFO) jsubfinder individually found: $(cat jsubfinder.txt | wc -l) url(s)"
 }
 
 recon() {  # Try to gain the maximum of uniq JS file from the target
@@ -121,12 +111,13 @@ recon() {  # Try to gain the maximum of uniq JS file from the target
   echo -e "\n\e[36m[+] Searching with chaos & gau & subjs & hakrawler & assetfinder & gospider \e[0m"
   use_recontools_individualy # result in gau_solo_urls.txt subjs_url.txt hakrawler_urls.txt gospider_url.txt
   echo -e "\e[36m[+] Searching JsFiles-links mixing gau & subjs & assetfinder \e[0m"
-  #combine_subdomainizer_assetfinder_gau_subjs  # result in subjs.txt
   #deep_and_long_recon
-  echo -e "\e[36m[+] Started gathering Endpoints\e[0m"
-  endpoint_js
+  echo -e "\e[36m[+] Started gathering Js files from domain and path found \e[0m"
+  search_jsFile_from_domain_found
+  echo -e "\e[36m[+] Filtering results \e[0m"
   regroup_found_and_filter
   cat urls.txt > report.html
+  echo -e "\e[36m[+] Sending result by mail \e[0m"
   python3 tools/sendReportByMail.py
 }
 

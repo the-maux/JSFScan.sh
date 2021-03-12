@@ -46,14 +46,16 @@ def sendMail():
     password = os.environ['USER_PASSWORD']
     message = buildMail()
     with open(buildReportArchive(), 'r') as file:
-        message.add_attachment(file.read(), subtype=mime_subtype, filename='urls.txt')
-        mail_server = smtplib.SMTP_SSL('smtp.gmail.com')
-        mail_server.login(username, password)
-        mail_server.send_message(message)
-        mail_server.quit()
-        print('(DEBUG) Sending report to the user by mail: OK')
-    print('(DEBUG) Sending report to the user by mail: KO')
-
+        try:
+            message.add_attachment(file.read(), subtype=mime_subtype, filename='urls.txt')
+            mail_server = smtplib.SMTP_SSL('smtp.gmail.com')
+            mail_server.login(username, password)
+            mail_server.send_message(message)
+            mail_server.quit()
+            return True
+        except smtplib.SMTPException as e:
+            print(e)
+    return False
 
 if __name__ == "__main__":
     sendMail()
