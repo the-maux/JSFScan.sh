@@ -4,6 +4,7 @@ on: [push]
 
 jobs:
   JSFScan:
+    runs-on: ubuntu-latest
     container:
       image: themaux/jsfscan:latest
       env:
