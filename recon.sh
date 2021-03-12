@@ -1,31 +1,36 @@
 #!/usr/bin/env bash
 
+deep_and_long_recon() {
+  cat target.txt | sed 's$https://$$' | chaos -silent | httpx -silent > chaos.txt
+  # TOOLONG: xargs -I@ -P20 sh -c 'gospider -a -s "@" -d 2' | grep -Eo "(http|https)://[^/"].*.js+" | sed "s#] > chaos.txt #TODO add in all urls.txt
+  echo -e "(INFO) chaos + wayback found: $(cat chaos.txt | wc -l) url(s)"
+  cat chaos.txt
+
+  # Removing hakrawler, cause its take too long for github actions ... more than 6hours :(
+  #  cat target.txt | hakrawler -js -plain -usewayback -depth 3 -scope subs | unew > hakrawlerHttpx.txt
+  #  echo -e "(INFO) hakrawler + wayback found: $(cat hakrawlerHttpx.txt | wc -l) url(s)"
+
+  cat target.txt | sed 's$https://$$' | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | sort -u > assetfinder_urls.txt
+  #TOLONG: | xargs -I% -P10 sh -c 'hakrawler -plain -linkfinder -depth 5 -url %' | awk '{print $3}' | grep -E "\.js(?:onp?)?$" |
+}
+
 use_recontools_individualy() {
-  #TOKNOW: assetfinder is not working good with "https://"
   cat target.txt | gau | grep -iE "\.js$" | sort -u > gau_solo_urls.txt
   echo -e "(INFO) gau individually found: $(cat gau_solo_urls.txt | wc -l) url(s)"
+
+  #TOKNOW: assetfinder is not working good with "https://"
+  cat target.txt | sed 's$https://$$' | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | sort -u > assetfinder_urls.txt
+  echo -e "(INFO) assetfinder individually found: $(cat assetfinder_urls.txt | wc -l) url(s)"
+
+  # TOKNOW: gospider is not working good without the "https://"
+  gospider -a -w -r -S target.txt -d 3 | grep -Eo "(http|https)://[^/\"].*\.js+" | sed "s#\] \- #\n#g" > gospider_url.txt
+  echo -e "(INFO) gospider individually found: $(cat gospider_url.txt | wc -l) url(s)"
 
   cat gau_solo_urls.txt | subjs > subjs_url.txt
   echo -e "(INFO) gau + subjs found: $(cat subjs_url.txt | wc -l) url(s)"
 
   cat target.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
   echo -e "(INFO) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
-
-  # TOKNOW: gospider is not working good without the "https://"
-  gospider -a -w -r -S target.txt -d 3 | grep -Eo "(http|https)://[^/\"].*\.js+" | sed "s#\] \- #\n#g" > gospider_url.txt
-  echo -e "(INFO) gospider individually found: $(cat gospider_url.txt | wc -l) url(s)"
-
-  cat target.txt | sed 's$https://$$' | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | sort -u > assetfinder_urls.txt
-  #TOLONG: | xargs -I% -P10 sh -c 'hakrawler -plain -linkfinder -depth 5 -url %' | awk '{print $3}' | grep -E "\.js(?:onp?)?$" |
-  echo -e "(INFO) assetfinder individually found: $(cat assetfinder_urls.txt | wc -l) url(s)"
-
-  cat target.txt | sed 's$https://$$' | chaos -silent | httpx -silent > chaos.txt
-  # TOOLONG: xargs -I@ -P20 sh -c 'gospider -a -s "@" -d 2' | grep -Eo "(http|https)://[^/"].*.js+" | sed "s#] > chaos.txt #TODO add in all urls.txt
-  echo -e "(INFO) chaos + wayback found: $(cat chaos.txt | wc -l) url(s)"
-  cat chaos.txt
-  # Removing hakrawler, cause its take too long for github actions ... more than 6hours :(
-#  cat target.txt | hakrawler -js -plain -usewayback -depth 3 -scope subs | unew > hakrawlerHttpx.txt
-#  echo -e "(INFO) hakrawler + wayback found: $(cat hakrawlerHttpx.txt | wc -l) url(s)"
 
   #assetfinder http://tesla.com | waybackurls | grep -E "\.json(?:onp?)?$" | anew
 }
@@ -57,12 +62,12 @@ combine_subdomainizer_assetfinder_gau_subjs() {  # mixing SubDomainizer + assetf
   echo -e "(INFO) subjs found: $(cat subj_gau_assetfinder.txt | wc -l) javascript file(s) from gau"
 }
 
-#Gather Endpoints From JsFiles
+#Gather new endpoints From JsFiles
 endpoint_js() {
   echo "Trying to find endpoint with this target:"
   # TOKNOW: linkfinder doesnt work if https is not present
-  cat urls_no_http.txt | sed 's$https://$$'
-  cat urls_no_http.txt | sed 's$https://$$' | awk '{print "https://" $0}' > search_endpoint.txt
+  cat urls_no_http.txt
+  cat urls_no_http.txt | sed 's$https://$$' | awk '{print "https://" $0}' > search_endpoint.txt # tobe sur there are alway a https://
   interlace -tL search_endpoint.txt -threads 5 -c "python3 ./tools/LinkFinder/linkfinder.py -d -i '_target_' -o cli >> all_endpoints.txt" --silent --no-bar
   number_of_endpoint_found=$(cat all_endpoints.txt | wc -l)
   if [ $number_of_endpoint_found = "0" ]
@@ -113,6 +118,7 @@ recon() {  # Try to gain the maximum of uniq JS file from the target
   use_recontools_individualy # result in gau_solo_urls.txt subjs_url.txt hakrawler_urls.txt gospider_url.txt
   echo -e "\e[36m[+] Searching JsFiles-links mixing gau & subjs & assetfinder \e[0m"
   combine_subdomainizer_assetfinder_gau_subjs  # result in subjs.txt
+  deep_and_long_recon
   echo -e "\e[36m[+] Started gathering Endpoints\e[0m"
   endpoint_js
   regroup_found_and_filter
@@ -121,3 +127,4 @@ recon() {  # Try to gain the maximum of uniq JS file from the target
 }
 
 recon
+
