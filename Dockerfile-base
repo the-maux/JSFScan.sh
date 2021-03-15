@@ -2,3 +2,5 @@ FROM golang:latest
 COPY ./install.sh .
 RUN bash ./install.sh
 WORKDIR /opt/JSFScan.sh
+
+#docker build -t themaux/jsfscan:latest -f Dockerfile-base  .

@@ -1,6 +1,4 @@
-
-
-# TOKNOW: Config is herited from image themaux/jsfscan on docker.io to bypass long docker build
+# TOKNOW: Config is herited from image themaux/jsfscan:latest on docker.io to bypass long docker build
 FROM themaux/jsfscan:latest
 
 COPY . /opt/JSFScan.sh

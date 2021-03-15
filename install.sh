@@ -20,7 +20,7 @@ cat ./Interlace/requirements.txt > requirements.txt
 cat ./SecretFinder/requirements.txt >> requirements.txt
 cat ./LinkFinder/requirements.txt >> requirements.txt
 cat ./Sublist3r/requirements.txt >> requirements.txt
-cat ./SubDomainizer/requirements.txt | grep -v "requests" >> requirements.txt
+cat ./SubDomainizer/requirements.txt | grep -v "requests" | grep -v "argparse" >> requirements.txt
 echo "colorama" >> requirements.txt
 cat requirements.txt
 pip3 install -r requirements.txt
