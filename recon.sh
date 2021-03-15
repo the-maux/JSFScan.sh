@@ -50,14 +50,14 @@ use_recontools_individualy() {
   echo -e "(INFO) After filtering duplicate, $(cat urls_no_http.txt | wc -l) domain(s) in scope"
 
   # Using gau after found all the subdomain
-  cat urls_no_http.txt | gau | grep -iE "\.js$" | sort -u > all_urls.txt
-  echo -e "(INFO) gau individually found: $(cat gau_solo_urls.txt | wc -l) url(s)"
+  cat urls_no_http.txt | gau | grep -iE "\.js$" | sort -u > all_url.txt
+  echo -e "(INFO) gau individually found: $(cat all_url.txt | wc -l) url(s)"
 
   # Using hakrawler
   cat urls_no_http.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
   echo -e "(INFO) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
-  cat hakrawler_urls.txt >> all_urls.txt
-
+  cat hakrawler_urls.txt >> all_url.txt
+  cat all_url.txt | sort -u > all_urls.txt
 }
 
 #Gather new endpoints From domain / path / JsFiles found
@@ -116,7 +116,7 @@ regroup_found_and_filter() {
 recon() {  # Try to gain the maximum of uniq JS file from the target
   echo "Searching JSFiles on target(s):" && cat target.txt
   use_recontools_individualy # result in gau_solo_urls.txt subjs_url.txt hakrawler_urls.txt gospider_url.txt
-  #deep_and_long_recon
+  #deep_and_long_resddcon
   #search_jsFile_from_domain_found
   regroup_found_and_filter
   cat urls.txt > report.html
