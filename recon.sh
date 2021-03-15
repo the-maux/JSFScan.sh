@@ -25,55 +25,59 @@ use_recontools_individualy() {
   #TODO: combine all this tool to maximize the result, for the just run 1 by 1 than filtering result for duplicates
   target=$(head -n 1 target.txt | sed 's$https://$$')
 
+  python3 ./tools/SubDomainizer/SubDomainizer.py -l target.txt -o SubDomainizer.txt -san all  &> nooutput
+  echo -e "(INFO) SubDomainizer found: $(cat SubDomainizer.txt | wc -l) domain(s) in scope"
+
   subfinder -d $target -silent > subfinder.txt
-  echo -e "(INFO) subfinder found: $(cat subfinder.txt | wc -l) subdomain(s)"
+  echo -e "(INFO) subfinder found: $(cat subfinder.txt | wc -l) domain(s) in scope"
+  cat subfinder.txt >> SubDomainizer.txt
 
   python3 ./tools/Sublist3r/sublist3r.py -d $target -o sublist3r.txt &> nooutput
-  echo -e "(INFO) sublist3r found: $(cat sublist3r.txt | wc -l) subdomain(s)"
-
-  python3 ./tools/SubDomainizer/SubDomainizer.py -l target.txt -o SubDomainizer.txt -san all  &> nooutput
-  echo -e "(INFO) SubDomainizer found: $(cat SubDomainizer.txt | wc -l) subdomain(s)"
-
+  echo -e "(INFO) sublist3r found: $(cat sublist3r.txt | wc -l) domain(s) in scope"
   cat sublist3r.txt >> SubDomainizer.txt
-  cat subfinder.txt >> SubDomainizer.txt
-  cat SubDomainizer.txt | sed 's$www.$$' | sort -u > urls_no_http.txt
-  echo -e "(INFO) After filtering duplicate, $(cat urls_no_http.txt | wc -l) subdomain(s) found"
-
-  # Using chaos + waybackurls
-  cat target.txt | sed 's$https://$$' | chaos -silent | waybackurls | httpx -silent > chaos.txt
-  echo -e "(INFO) chaos + wayback found: $(cat chaos.txt | wc -l) url(s)"
-
-  # Using gau
-  cat target.txt | gau | grep -iE "\.js$" | sort -u > gau_solo_urls.txt
-  echo -e "(INFO) gau individually found: $(cat gau_solo_urls.txt | wc -l) url(s)"
 
   #TOKNOW: assetfinder is not working good with "https://"
-  cat target.txt | sed 's$https://$$' | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | sort -u > assetfinder_urls.txt
+  cat target.txt | sed 's$https://$$' | assetfinder -subs-only | sort -u > assetfinder_urls.txt
   echo -e "(INFO) assetfinder individually found: $(cat assetfinder_urls.txt | wc -l) url(s)"
+  cat assetfinder_urls.txt >> SubDomainizer.txt
+
+  # Using chaos + waybackurls
+  cat target.txt | sed 's$https://$$' | chaos -silent > chaos.txt
+  echo -e "(INFO) chaos found: $(cat chaos.txt | wc -l) url(s)"
+  cat chaos.txt >> SubDomainizer.txt
+
+  cat SubDomainizer.txt | sed 's$www.$$' | sort -u > urls_no_http.txt
+  echo -e "(INFO) After filtering duplicate, $(cat urls_no_http.txt | wc -l) domain(s) in scope"
+
+  # Using gau after found all the subdomain
+  cat urls_no_http.txt | gau | grep -iE "\.js$" | sort -u > all_urls.txt
+  echo -e "(INFO) gau individually found: $(cat gau_solo_urls.txt | wc -l) url(s)"
 
   # Using hakrawler
-  cat target.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
+  cat urls_no_http.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
   echo -e "(INFO) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
   cat hakrawler_urls.txt >> all_urls.txt
-  cat assetfinder_urls.txt >> all_urls.txt
-  cat chaos.txt >>  all_urls.txt
+
 }
 
 #Gather new endpoints From domain / path / JsFiles found
 search_jsFile_from_domain_found() {
   echo -e "\e[36m[+] Started gathering Js files from domain and path found \e[0m"
   # Using subjs
-  cat gau_solo_urls.txt | subjs > subjs_url.txt
+  cat SubDomainizer.txt | subjs > subjs_url.txt
   echo -e "(INFO) gau + subjs found: $(cat subjs_url.txt | wc -l) url(s)"
 
   echo "Searching with jsubfinder on urls.txt, exemple of targets:"
-  cat urls.txt | tail -n 50
-  cat urls.txt | jsubfinder > jsubfinder.txt #TODO add in all urls.txt
+  cat SubDomainizer.txt | tail -n 50
+  cat SubDomainizer.txt | jsubfinder > jsubfinder.txt #TODO add in all urls.txt
   echo -e "(INFO) jsubfinder individually found: $(cat jsubfinder.txt | wc -l) url(s)"
 
+  #regroup found of subjs &  jsubfinder & LinkFinder
+  cat subjs_url.txt >> all_js_files_found.txt
+  cat jsubfinder.txt >> all_js_files_found.txt
+
   # TOKNOW: linkfinder doesnt work if https is not present
-  cat urls_no_http.txt
-  cat urls_no_http.txt | sed 's$https://$$' | awk '{print "https://" $0}' > search_endpoint.txt # tobe sur there are alway a https://
+  cat all_js_files_found.txt | sed 's$https://$$' | awk '{print "https://" $0}' > search_endpoint.txt # tobe sur there are alway a https://
   interlace -tL search_endpoint.txt -threads 5 -c "python3 ./tools/LinkFinder/linkfinder.py -d -i '_target_' -o cli >> all_endpoints.txt" --silent --no-bar
   number_of_endpoint_found=$(cat all_endpoints.txt | wc -l)
   if [ $number_of_endpoint_found = "0" ]
@@ -82,8 +86,6 @@ search_jsFile_from_domain_found() {
   fi
   cat all_endpoints.txt | sort -u > endpoints.txt
   echo "(INFO) Number of endpoint found: $(cat endpoints.txt | wc -l)"
-  cat gau_solo_urls.txt > all_urls.txt
-  cat subjs_url.txt >> all_urls.txt
 }
 
 regroup_found_and_filter() {
@@ -93,10 +95,10 @@ regroup_found_and_filter() {
   echo "(INFO) Before filtering duplicate/offline/useless files, we found: $((number_of_file_found)) files to analyse"
 
   # filtering dead link
-  cat all_urls.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 > urls_alive.txt
+  cat all_js_files_found.txt | httpx -follow-redirects -status-code -silent | grep "[200]" | cut -d ' ' -f1 > urls_alive.txt
 
   # filtering duplicate & libs with no impact
-  cat urls_alive.txt | awk -F '?' '{ print $1 }' | grep -v "jquery" | grep $(cat target.txt | sed 's$https://$$') | unew > urls.txt
+  cat all_js_files_found.txt | awk -F '?' '{ print $1 }' | grep -v "jquery" | grep $(cat target.txt | sed 's$https://$$') | sort -u > urls.txt
   number_of_file_found=$(cat urls.txt | wc -l)
   echo "(INFO) Result of filters: Found $((number_of_file_found)) javascripts files to analyse"
 
