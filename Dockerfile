@@ -1,7 +1,4 @@
-#FROM golang:latest
-#COPY ./install.sh .
-#RUN bash ./install.sh
-#WORKDIR /opt/JSFScan.sh
+
 
 # TOKNOW: Config is herited from image themaux/jsfscan on docker.io to bypass long docker build
 FROM themaux/jsfscan:latest
