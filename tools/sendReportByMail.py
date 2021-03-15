@@ -13,7 +13,7 @@ WORKDIR = '/opt/JSFScan.sh'
 
 def getListOfTxtFilesToSend():
     result = list()
-    for fileInDirectory in  os.listdir(path=WORKDIR):
+    for fileInDirectory in os.listdir(path=WORKDIR):
         if fileInDirectory.endswith('.txt'):
             result.append(fileInDirectory)
     return result
@@ -25,7 +25,10 @@ def buildReportArchive():
         for logFile in getListOfTxtFilesToSend():
             if logFile is not None:  # file is None when not found
                 print(f'\t Compressing file: {logFile}')
-                PJFile.write(logFile)
+                try:
+                   PJFile.write(logFile)
+                except UnicodeDecodeError:
+                    print(f"(ERROR) Unicode error for file {logFile}")
     return WORKDIR + 'logs.zip'
 
 
