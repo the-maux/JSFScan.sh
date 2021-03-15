@@ -17,10 +17,10 @@ git clone https://github.com/nsonaniya2010/SubDomainizer.git
 git clone https://github.com/aboul3la/Sublist3r.git
 
 cat ./Interlace/requirements.txt > requirement_all.txt
-cat ./SecretFinder/requirements.txt >> requirement_all.txt
+cat ./SecretFinder/requirements.txt | grep -v "requests" >> requirement_all.txt
 cat ./LinkFinder/requirements.txt >> requirement_all.txt
 cat ./Sublist3r/requirements.txt >> requirement_all.txt
-cat ./SubDomainizer/requirements.txt | grep -v "requests" | grep -v "argparse" | sort -u >> requirement_all.txt
+cat ./SubDomainizer/requirements.txt | grep -v "requests" | grep -v "argparse" >> requirement_all.txt
 echo "colorama" >> requirement_all.txt
 cat requirement_all.txt | sort -u > requirements.txt
 cat requirements.txt
