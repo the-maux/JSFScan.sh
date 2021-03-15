@@ -16,12 +16,13 @@ git clone https://github.com/m4ll0k/SecretFinder.git
 git clone https://github.com/nsonaniya2010/SubDomainizer.git
 git clone https://github.com/aboul3la/Sublist3r.git
 
-cat ./Interlace/requirements.txt | sort -u > requirements.txt
-cat ./SecretFinder/requirements.txt | sort -u >> requirements.txt
-cat ./LinkFinder/requirements.txt | sort -u >> requirements.txt
-cat ./Sublist3r/requirements.txt | sort -u >> requirements.txt
-cat ./SubDomainizer/requirements.txt | grep -v "requests" | grep -v "argparse" | sort -u >> requirements.txt
-echo "colorama" >> requirements.txt
+cat ./Interlace/requirements.txt > requirement_all.txt
+cat ./SecretFinder/requirements.txt >> requirement_all.txt
+cat ./LinkFinder/requirements.txt >> requirement_all.txt
+cat ./Sublist3r/requirements.txt >> requirement_all.txt
+cat ./SubDomainizer/requirements.txt | grep -v "requests" | grep -v "argparse" | sort -u >> requirement_all.txt
+echo "colorama" >> requirement_all.txt
+cat requirement_all.txt | sort -u > requirements.txt
 cat requirements.txt
 pip3 install -r requirements.txt
 cd Interlace && python3 ./setup.py install
