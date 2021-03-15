@@ -38,7 +38,7 @@ use_recontools_individualy() {
 
   #TOKNOW: assetfinder is not working good with "https://"
   cat target.txt | sed 's$https://$$' | assetfinder -subs-only | sort -u > assetfinder_urls.txt
-  echo -e "(INFO) assetfinder individually found: $(cat assetfinder_urls.txt | wc -l) url(s)"
+  echo -e "(INFO) assetfinder individually found: $(cat assetfinder_urls.txt | wc -l) url(s) in scope"
   cat assetfinder_urls.txt >> SubDomainizer.txt
 
   # Using chaos + waybackurls
@@ -64,13 +64,13 @@ use_recontools_individualy() {
 search_jsFile_from_domain_found() {
   echo -e "\e[36m[+] Started gathering Js files from domain and path found \e[0m"
   # Using subjs
-  cat SubDomainizer.txt
-  cat SubDomainizer.txt | subjs > subjs_url.txt
+  cat SubDomainizer.txt | sed 's$https://$$' | sed 's$www.$$' | sort -u > listOfDomains.txt
+  cat listOfDomains.txt
+  cat listOfDomains.txt | subjs > subjs_url.txt
   echo -e "(INFO) gau + subjs found: $(cat subjs_url.txt | wc -l) url(s)"
 
   echo "Searching with jsubfinder on urls.txt, exemple of targets:"
-  cat SubDomainizer.txt | tail -n 50
-  cat SubDomainizer.txt | jsubfinder > jsubfinder.txt #TODO add in all urls.txt
+  cat listOfDomains.txt | jsubfinder > jsubfinder.txt #TODO add in all urls.txt
   echo -e "(INFO) jsubfinder individually found: $(cat jsubfinder.txt | wc -l) url(s)"
 
   #regroup found of subjs &  jsubfinder & LinkFinder
