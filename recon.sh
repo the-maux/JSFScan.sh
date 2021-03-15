@@ -30,26 +30,26 @@ use_recontools_individualy() {
   python3 ./tools/SubDomainizer/SubDomainizer.py -l target.txt -o SubDomainizer.txt -san all  &> nooutput
   echo -e "(INFO) SubDomainizer found: $(cat SubDomainizer.txt | wc -l) subdomain(s)"
 
-  cat sublist3r.txt >> SubDomainizer.txt
-  cat subfinder.txt >> SubDomainizer.txt
-  cat SubDomainizer.txt | sed 's$www.$$' | sort -u > urls_no_http.txt
-  echo -e "(INFO) After filtering duplicate, $(cat urls_no_http.txt | wc -l) subdomain(s) found"
-
-  # Using chaos + waybackurls
-  cat target.txt | sed 's$https://$$' | chaos -silent | waybackurls | httpx -silent > chaos.txt
-  echo -e "(INFO) chaos + wayback found: $(cat chaos.txt | wc -l) url(s)"
-
-  # Using gau
-  cat target.txt | gau | grep -iE "\.js$" | sort -u > gau_solo_urls.txt
-  echo -e "(INFO) gau individually found: $(cat gau_solo_urls.txt | wc -l) url(s)"
-
-  #TOKNOW: assetfinder is not working good with "https://"
-  cat target.txt | sed 's$https://$$' | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | sort -u > assetfinder_urls.txt
-  echo -e "(INFO) assetfinder individually found: $(cat assetfinder_urls.txt | wc -l) url(s)"
-
-  # Using hakrawler
-  cat target.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
-  echo -e "(INFO) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
+#  cat sublist3r.txt >> SubDomainizer.txt
+#  cat subfinder.txt >> SubDomainizer.txt
+#  cat SubDomainizer.txt | sed 's$www.$$' | sort -u > urls_no_http.txt
+#  echo -e "(INFO) After filtering duplicate, $(cat urls_no_http.txt | wc -l) subdomain(s) found"
+#
+#  # Using chaos + waybackurls
+#  cat target.txt | sed 's$https://$$' | chaos -silent | waybackurls | httpx -silent > chaos.txt
+#  echo -e "(INFO) chaos + wayback found: $(cat chaos.txt | wc -l) url(s)"
+#
+#  # Using gau
+#  cat target.txt | gau | grep -iE "\.js$" | sort -u > gau_solo_urls.txt
+#  echo -e "(INFO) gau individually found: $(cat gau_solo_urls.txt | wc -l) url(s)"
+#
+#  #TOKNOW: assetfinder is not working good with "https://"
+#  cat target.txt | sed 's$https://$$' | assetfinder -subs-only | httpx -timeout 3 -threads 300 --follow-redirects -silent | sort -u > assetfinder_urls.txt
+#  echo -e "(INFO) assetfinder individually found: $(cat assetfinder_urls.txt | wc -l) url(s)"
+#
+#  # Using hakrawler
+#  cat target.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
+#  echo -e "(INFO) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
 }
 
 #Gather new endpoints From domain / path / JsFiles found
@@ -113,8 +113,8 @@ recon() {  # Try to gain the maximum of uniq JS file from the target
   echo -e "\e[36m[+] Searching JsFiles-links mixing gau & subjs & assetfinder \e[0m"
   #deep_and_long_recon
   echo -e "\e[36m[+] Started gathering Js files from domain and path found \e[0m"
-  search_jsFile_from_domain_found
-  echo -e "\e[36m[+] Filtering results \e[0m"
+  #search_jsFile_from_domain_found
+  #echo -e "\e[36m[+] Filtering results \e[0m"
   regroup_found_and_filter
   cat urls.txt > report.html
   echo -e "\e[36m[+] Sending result by mail \e[0m"

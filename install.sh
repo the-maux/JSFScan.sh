@@ -27,6 +27,7 @@ cat requirements.txt
 pip3 install -r requirements.txt
 cd Interlace && python3 ./setup.py install
 cd /opt/JSFScan.sh/tools/LinkFinder && python3 ./setup.py install
+cd /opt/JSFScan.sh/tools/LinkFinder && python3 ./setup.py install
 
 
 # install go tools
@@ -35,7 +36,7 @@ GO111MODULE=on go get -u github.com/tomnomnom/assetfinder
 GO111MODULE=on go get -v github.com/hakluke/hakrawler
 GO111MODULE=on go get -u github.com/jaeles-project/gospider
 GO111MODULE=on go get -u github.com/dwisiswant0/unew
-# GO111MODULE=on go get -u github.com/shenwei356/rush /!\ No need, cause 1 target:
+# GO111MODULE=on go get -u github.com/shenwei356/rush /!\ No need, because: 1 target only by contener
 GO111MODULE=on go get -u github.com/hiddengearz/jsubfinder
 GO111MODULE=on go get -v github.com/projectdiscovery/httpx/cmd/httpx
 GO111MODULE=on go get -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
