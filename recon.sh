@@ -66,7 +66,7 @@ search_jsFile_from_domain_found() {
   # Using subjs
   cat SubDomainizer.txt | sed 's$https://$$' | sed 's$www.$$' | sort -u > listOfDomains.txt
   cat listOfDomains.txt
-  cat listOfDomains.txt | subjs > subjs_url.txt
+  cat listOfDomains.txt | gau -subs -b png,jpg,jpeg,html,txt,JPG | subjs  |  awk -F '\?' '{print $1}' | sort -u > subjs_url.txt
   echo -e "(INFO) gau + subjs found: $(cat subjs_url.txt | wc -l) url(s)"
 
   echo "Searching with jsubfinder on urls.txt, exemple of targets:"
