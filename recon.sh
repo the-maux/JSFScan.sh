@@ -118,7 +118,7 @@ recon() {  # Try to gain the maximum of uniq JS file from the target
   echo "Searching JSFiles on target(s):" && cat target.txt
   use_recontools_individualy # result in gau_solo_urls.txt subjs_url.txt hakrawler_urls.txt gospider_url.txt
   #deep_and_long_resddcon
-  #search_jsFile_from_domain_found
+  search_jsFile_from_domain_found
   regroup_found_and_filter
   cat urls.txt > report.html
   echo -e "\e[36m[+] Sending result by mail \e[0m"
