@@ -64,6 +64,7 @@ use_recontools_individualy() {
 search_jsFile_from_domain_found() {
   echo -e "\e[36m[+] Started gathering Js files from domain and path found \e[0m"
   # Using subjs
+  cat SubDomainizer.txt
   cat SubDomainizer.txt | subjs > subjs_url.txt
   echo -e "(INFO) gau + subjs found: $(cat subjs_url.txt | wc -l) url(s)"
 
