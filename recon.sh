@@ -72,7 +72,7 @@ search_jsFile_from_domain_found() {
   echo -e "(INFO) gau + subjs found: $(cat subjs_url.txt | wc -l) url(s)"
 
   echo "Searching with jsubfinder on urls.txt, exemple of targets:"
-  cat listOfDomains.txt | jsubfinder > jsubfinder.txt #TODO add in all urls.txt
+  jsubfinder -f listOfDomains.txt  > jsubfinder.txt #TODO add in all urls.txt
   echo -e "(INFO) jsubfinder individually found: $(cat jsubfinder.txt | wc -l) url(s)"
 
   #regroup found of subjs &  jsubfinder & LinkFinder
