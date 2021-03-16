@@ -17,16 +17,17 @@ def getListOfTxtFilesToSend():
 
 
 def buildReportArchive():
-    """ Zip all the *.txt files in 1 file archive.zip"""
-    with ZipFile(WORKDIR + 'result.zip', mode='w', compression=ZIP_DEFLATED) as PJFile:
+    """ Zip all the *.txt files in 1 file result.zip"""
+    pathOfFile = WORKDIR + 'result.zip'
+    with ZipFile(pathOfFile, mode='w', compression=ZIP_DEFLATED) as archive:
         for logFile in getListOfTxtFilesToSend():
             if logFile is not None:  # file is None when not found
                 print(f'\t Compressing file: {logFile}')
                 try:
-                   PJFile.write(logFile)
+                    archive.write(logFile)
                 except UnicodeDecodeError:
                     print(f"(ERROR) Unicode error for file {logFile}")
-    return WORKDIR + 'logs.zip'
+    return pathOfFile
 
 
 def buildMail():
