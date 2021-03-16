@@ -51,7 +51,7 @@ def sendMail():
     message = buildMail()
     archive = buildReportArchive()
     with open(archive, 'rb') as file:
-        message.add_attachment(file.read(), subtype=mime_subtype, filename='result.zip')
+        message.add_attachment(file.read(), subtype=mime_subtype, maintype='octet-stream', filename='result.zip')
     try:
         mail_server = smtplib.SMTP_SSL('smtp.gmail.com')
         mail_server.login(username, password)
