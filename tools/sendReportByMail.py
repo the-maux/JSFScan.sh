@@ -22,7 +22,6 @@ def buildReportArchive():
     with ZipFile(pathOfFile, mode='w', compression=ZIP_DEFLATED) as archive:
         for logFile in getListOfTxtFilesToSend():
             if logFile is not None:  # file is None when not found
-                print(f'\t Compressing file: {logFile}')
                 try:
                     archive.write(logFile)
                 except UnicodeDecodeError:
@@ -57,9 +56,11 @@ def sendMail():
         mail_server.login(username, password)
         mail_server.send_message(message)
         mail_server.quit()
+        print('(DEBUG) Sent result by mails: OK')
         return True
     except smtplib.SMTPException as e:
         print(e)
+    print('(WARNING) Sent result by mails: FAILED')
     return False
 
 

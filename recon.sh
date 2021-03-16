@@ -49,15 +49,6 @@ use_recontools_individualy() {
   cat SubDomainizer.txt | sed 's$www.$$' | sort -u > urls_no_http.txt
   echo -e "(INFO) After filtering duplicate, $(cat urls_no_http.txt | wc -l) domain(s) in scope"
 
-  # Using gau after found all the subdomain
-  cat urls_no_http.txt | gau | grep -iE "\.js$" | sort -u > all_url.txt
-  echo -e "(INFO) gau individually found: $(cat all_url.txt | wc -l) url(s)"
-
-  # Using hakrawler
-  cat urls_no_http.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
-  echo -e "(INFO) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
-#TODO: mix all the domain in all_urls.txt
-  cat hakrawler_urls.txt >> all_url.txt
   cat all_url.txt | sort -u > all_urls.txt
 }
 
@@ -67,6 +58,7 @@ search_jsFile_from_domain_found() {
   # Using subjs
   cat SubDomainizer.txt | sed 's$https://$$' | sed 's$www.$$' | sort -u > listOfDomains.txt
   cat listOfDomains.txt
+
   cat listOfDomains.txt | gau -subs -b png,jpg,jpeg,html,txt,JPG | subjs  |  awk -F '\?' '{print $1}' | sort -u > subjs_url.txt
   #TODO: with gau filter to get only domain, not all false positive... with subjs its just a wast of time ...
   echo -e "(INFO) gau + subjs found: $(cat subjs_url.txt | wc -l) url(s)"
@@ -78,6 +70,11 @@ search_jsFile_from_domain_found() {
   #regroup found of subjs &  jsubfinder & LinkFinder
   cat subjs_url.txt >> all_js_files_found.txt
   cat jsubfinder.txt >> all_js_files_found.txt
+
+# Using hakrawler
+  cat listOfDomains.txt | hakrawler -js -depth 2 -scope subs -plain >> hakrawler_urls.txt
+  echo -e "(INFO) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
+  cat hakrawler_urls.txt >> all_js_files_found.txt
 
   # TOKNOW: linkfinder doesnt work if https is not present
   cat all_js_files_found.txt | sed 's$https://$$' | awk '{print "https://" $0}' > search_endpoint.txt # tobe sur there are alway a https://
