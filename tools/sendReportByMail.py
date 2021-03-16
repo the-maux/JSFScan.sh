@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*
-
 import os
 import smtplib
 import mimetypes
@@ -21,7 +18,7 @@ def getListOfTxtFilesToSend():
 
 def buildReportArchive():
     """ Zip all the *.txt files in 1 file archive.zip"""
-    with ZipFile(WORKDIR + 'logs.zip', mode='w', compression=ZIP_DEFLATED) as PJFile:
+    with ZipFile(WORKDIR + 'result.zip', mode='w', compression=ZIP_DEFLATED) as PJFile:
         for logFile in getListOfTxtFilesToSend():
             if logFile is not None:  # file is None when not found
                 print(f'\t Compressing file: {logFile}')
@@ -51,16 +48,17 @@ def sendMail():
     username = os.environ['USER_EMAIL']
     password = os.environ['USER_PASSWORD']
     message = buildMail()
-    with open(buildReportArchive(), 'rb') as file:
-        try:
-            message.add_attachment(file.read(), subtype=mime_subtype, filename='result.zip')
-            mail_server = smtplib.SMTP_SSL('smtp.gmail.com')
-            mail_server.login(username, password)
-            mail_server.send_message(message)
-            mail_server.quit()
-            return True
-        except smtplib.SMTPException as e:
-            print(e)
+    archive = buildReportArchive()
+    with open(archive, 'rb') as file:
+        message.add_attachment(file.read(), subtype=mime_subtype, filename='result.zip')
+    try:
+        mail_server = smtplib.SMTP_SSL('smtp.gmail.com')
+        mail_server.login(username, password)
+        mail_server.send_message(message)
+        mail_server.quit()
+        return True
+    except smtplib.SMTPException as e:
+        print(e)
     return False
 
 
