@@ -52,10 +52,10 @@ use_recontools_individualy() {
   # Using gau after found all the subdomain
   cat urls_no_http.txt | gau | grep -iE "\.js$" | sort -u > all_url.txt
   echo -e "(INFO) gau individually found: $(cat all_url.txt | wc -l) url(s)"
-#
-#  # Using hakrawler
-#  cat urls_no_http.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
-#  echo -e "(INFO) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
+
+  # Using hakrawler
+  cat urls_no_http.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
+  echo -e "(INFO) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
 #TODO: mix all the domain in all_urls.txt
   cat hakrawler_urls.txt >> all_url.txt
   cat all_url.txt | sort -u > all_urls.txt
