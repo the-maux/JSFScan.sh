@@ -51,7 +51,7 @@ def sendMail():
     username = os.environ['USER_EMAIL']
     password = os.environ['USER_PASSWORD']
     message = buildMail()
-    with open(buildReportArchive(), 'r') as file:
+    with open(buildReportArchive(), 'rb') as file:
         try:
             message.add_attachment(file.read(), subtype=mime_subtype, filename='result.zip')
             mail_server = smtplib.SMTP_SSL('smtp.gmail.com')
@@ -62,6 +62,7 @@ def sendMail():
         except smtplib.SMTPException as e:
             print(e)
     return False
+
 
 if __name__ == "__main__":
     sendMail()
