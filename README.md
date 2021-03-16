@@ -59,3 +59,6 @@ Once Js files collected, it send the results to your mail or in your local
 - Make a Light / Deep mode to let run for infinite if thats need
 - Make a no mail option, to let people work only in local
 - Informe #bugbountytips when ready 
+
+
+![](https://github.com/the-maux/JSFScan.sh/blob/master/JS.png?raw=true) 
