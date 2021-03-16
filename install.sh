@@ -27,7 +27,7 @@ cat requirements.txt
 pip3 install -r requirements.txt
 cd Interlace && python3 ./setup.py install
 cd /opt/JSFScan.sh/tools/LinkFinder && python3 ./setup.py install
-cd /opt/JSFScan.sh/tools/LinkFinder && python3 ./setup.py install
+
 
 
 # install go tools
@@ -50,4 +50,4 @@ cd /opt/JSFScan.sh/
 export HOME=/opt/JSFScan/
 export GOPATH=$HOME/go/bin
 export PATH=$PATH:$GOPATH
-export OUTPUT_DIR=/opt/JSFScancat
+export OUTPUT_DIR=/opt/JSFScan

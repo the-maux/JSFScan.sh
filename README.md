@@ -34,9 +34,9 @@ Once Js files collected, it send the results to your mail or in your local
 5. bash ./recon.sh
 
 #### `Lists of tools`: 
-- https://github.com/projectdiscovery/httpx/cmd/httpx
-- https://github.com/projectdiscovery/subfinder/v2/cmd/subfinder
-- https://github.com/projectdiscovery/chaos-client/cmd/chaos
+- https://github.com/projectdiscovery/httpx
+- https://github.com/projectdiscovery/subfinder
+- https://github.com/projectdiscovery/chaos-client
 - https://github.com/tomnomnom/waybackurls
 - https://github.com/tomnomnom/assetfinder
 - https://github.com/lc/gau
