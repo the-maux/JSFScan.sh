@@ -53,6 +53,8 @@ Once Js files collected, it send the results to your mail or in your local
 - BASH :heart:
 
 
+![](https://github.com/the-maux/JSFScan.sh/blob/master/JS.png?raw=true) 
+
 #### TODO:
 - Improve GithubActions report (build a workflow when job are more long than 6hours)
 - Mix all the recon tools together to find more domain
