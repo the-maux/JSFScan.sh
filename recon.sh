@@ -56,6 +56,7 @@ use_recontools_individualy() {
 #  # Using hakrawler
 #  cat urls_no_http.txt | hakrawler -js -depth 2 -scope subs -plain > hakrawler_urls.txt
 #  echo -e "(INFO) hakrawler individually found: $(cat hakrawler_urls.txt | wc -l) url(s)"
+#TODO: mix all the domain in all_urls.txt
   cat hakrawler_urls.txt >> all_url.txt
   cat all_url.txt | sort -u > all_urls.txt
 }
@@ -111,7 +112,7 @@ regroup_found_and_filter() {
   if [ $number_of_file_found = "0" ]
   then
       echo "(ERROR) No JS file found during recon, Exiting..."
-      exit 1
+      #exit 1
   fi
 }
 
