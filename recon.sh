@@ -58,6 +58,7 @@ search_jsFile_from_domain_found() {
   cat SubDomainizer.txt | sed 's$https://$$' | sed 's$www.$$' | sort -u > listOfDomains.txt
 
   cat listOfDomains.txt | gau -subs -b png,jpg,jpeg,html,txt,JPG | subjs  |  awk -F '\?' '{print $1}' | sort -u > subjs_url.txt
+  echo test
   #TODO: with gau filter to get only domain, not all false positive... with subjs its just a wast of time ...
   echo -n `date +"[%m-%d %H:%M:%S]"` && echo -e "(INFO) gau + subjs found: $(cat subjs_url.txt | wc -l) url(s)"
   cat subjs_url.txt >> all_js_files_found.txt
